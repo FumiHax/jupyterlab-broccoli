@@ -6,7 +6,7 @@ export const TOOLBOX = {
   contents: [
     {
       kind: 'category',
-      name: 'Logic',
+      name: '%{BKY_TOOLBOX_LOGIC}',
       colour: '210',
       contents: [
         {
@@ -46,7 +46,7 @@ export const TOOLBOX = {
     },
     {
       kind: 'category',
-      name: 'Loops',
+      name: '%{BKY_TOOLBOX_LOOPS}',
       colour: '120',
       contents: [
         {
@@ -80,7 +80,7 @@ export const TOOLBOX = {
     },
     {
       kind: 'CATEGORY',
-      name: 'Math',
+      name: '%{BKY_TOOLBOX_MATH}',
       colour: '230',
       contents: [
         {
@@ -161,7 +161,7 @@ export const TOOLBOX = {
     },
     {
       kind: 'CATEGORY',
-      name: 'Text',
+      name: '%{BKY_TOOLBOX_TEXT}',
       colour: '160',
       contents: [
         {
@@ -238,7 +238,7 @@ export const TOOLBOX = {
     },
     {
       kind: 'CATEGORY',
-      name: 'Lists',
+      name: '%{BKY_TOOLBOX_LISTS}',
       colour: '260',
       contents: [
         {
@@ -307,7 +307,7 @@ export const TOOLBOX = {
     },
     {
       kind: 'CATEGORY',
-      name: 'Color',
+      name: '%{BKY_TOOLBOX_COLOR}',
       colour: '20',
       contents: [
         {
@@ -341,13 +341,13 @@ export const TOOLBOX = {
       kind: 'CATEGORY',
       colour: '330',
       custom: 'VARIABLE',
-      name: 'Variables'
+      name: '%{BKY_TOOLBOX_VARIABLES}'
     },
     {
       kind: 'CATEGORY',
       colour: '290',
       custom: 'PROCEDURE',
-      name: 'Functions'
+      name: '%{BKY_TOOLBOX_FUNCTIONS}'
     }
   ]
 };
@@ -369,7 +369,8 @@ const jupyterlab_theme = Blockly.Theme.defineTheme('jupyterlab', {
     cursorColour: 'var(--jp-scrollbar-background-color)'
   },
   fontStyle: {
-    family: 'var(--jp-ui-font-family)'
+    // letters are corrupted in spacing with var()
+    family: '--jp-ui-font-family' 
   }
 });
 

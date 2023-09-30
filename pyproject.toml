@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab~=3.6"]
 
 [project]
-name = "jupyterlab_blockly"
+name = "jupyterlab_broccoli"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.7"
@@ -42,24 +42,24 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["/jupyterlab_blockly/labextension"]
+artifacts = ["/jupyterlab_broccoli/labextension"]
 exclude = ["/.github", "/binder", "node_modules"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "./packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyterlab_blockly/labextension" = "share/jupyter/labextensions/jupyterlab-blockly-extension"
-"install.json" = "share/jupyter/labextensions/jupyterlab-blockly-extension/install.json"
+"jupyterlab_broccoli/labextension" = "share/jupyter/labextensions/jupyterlab-broccoli-extension"
+"install.json" = "share/jupyter/labextensions/jupyterlab-broccoli-extension/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "jupyterlab_blockly/labextension/static/style.js",
-    "jupyterlab_blockly/labextension/package.json",
+    "jupyterlab_broccoli/labextension/static/style.js",
+    "jupyterlab_broccoli/labextension/package.json",
 ]
-skip-if-exists = ["jupyterlab_blockly/labextension/static/style.js"]
+skip-if-exists = ["jupyterlab_broccoli/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = ["jlpm"]

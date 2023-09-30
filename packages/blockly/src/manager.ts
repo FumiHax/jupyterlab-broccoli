@@ -7,8 +7,11 @@ import { ISignal, Signal } from '@lumino/signaling';
 
 import * as Blockly from 'blockly';
 
+import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
+import { JupyterFrontEnd } from '@jupyterlab/application';
+import { ILabShell } from '@jupyterlab/application';
+
 import { BlocklyRegistry } from './registry';
-import { ToolboxDefinition } from 'blockly/core/utils/toolbox';
 
 /**
  * BlocklyManager the manager for each document
@@ -23,15 +26,20 @@ export class BlocklyManager {
   private _sessionContext: ISessionContext;
   private _mimetypeService: IEditorMimeTypeService;
   private _changed: Signal<this, BlocklyManager.Change>;
+  private _language: string;
+  private _app: JupyterFrontEnd;
+  private _shell: ILabShell;
 
   /**
    * Constructor of BlocklyManager.
    */
   constructor(
+    app: JupyterFrontEnd,
     registry: BlocklyRegistry,
     sessionContext: ISessionContext,
-    mimetypeService: IEditorMimeTypeService
+    mimetypeService: IEditorMimeTypeService,
   ) {
+    this._app = app;
     this._registry = registry;
     this._sessionContext = sessionContext;
     this._mimetypeService = mimetypeService;
@@ -41,6 +49,28 @@ export class BlocklyManager {
 
     this._changed = new Signal<this, BlocklyManager.Change>(this);
     this._sessionContext.kernelChanged.connect(this._onKernelChanged, this);
+
+    this._language = this._registry.language;
+    import(`./msg/${this._language}.js`)
+    .then(() => { 
+      this._changed.emit('toolbox');
+    })
+    .catch(() => {
+      if (this._language !== 'En') {
+        import(`./msg/En.js`)
+        .then(() => { this._changed.emit('toolbox'); })
+        .catch(() => {});
+      }
+    });
+
+    this._shell = this._app.shell as ILabShell;
+    this._shell.currentChanged.connect((_, change) => {
+      this._changed.emit('focus');
+    });
+  }
+
+  get shell(): ILabShell {
+    return this._shell;
   }
 
   /**
@@ -74,6 +104,13 @@ export class BlocklyManager {
   }
 
   /**
+   *
+   */
+  get kernelspec(): KernelSpec.ISpecModel {
+    return this._selectedKernel;
+  }
+
+  /**
    * Returns the selected generator.
    */
   get generator(): Blockly.Generator {
@@ -85,6 +122,15 @@ export class BlocklyManager {
    */
   get changed(): ISignal<this, BlocklyManager.Change> {
     return this._changed;
+  }
+
+  /**
+   * Send a 'block' signal to BlocklyEditor
+   */
+  dirty(dirty: boolean): void {
+    if (dirty) {
+      this._changed.emit('dirty');
+    }
   }
 
   /**
@@ -178,5 +224,5 @@ export namespace BlocklyManager {
   /**
    * The argument of the signal manager changed.
    */
-  export type Change = 'toolbox' | 'kernel';
+  export type Change = 'toolbox' | 'kernel' | 'focus' | 'dirty';
 }

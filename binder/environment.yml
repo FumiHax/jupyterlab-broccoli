@@ -1,10 +1,10 @@
-# a mybinder.org-ready environment for demoing jupyterlab_blockly
+# a mybinder.org-ready environment for demoing jupyterlab_broccoli
 # this environment may also be used locally on Linux/MacOS/Windows, e.g.
 #
 #   conda env update --file binder/environment.yml
-#   conda activate jupyterlab-blockly-demo
+#   conda activate jupyterlab-broccoli-demo
 #
-name: jupyterlab-blockly-demo
+name: jupyterlab-broccoli-demo
 
 channels:
   - conda-forge

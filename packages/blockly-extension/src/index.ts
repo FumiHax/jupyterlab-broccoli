@@ -7,15 +7,15 @@ import { jsonIcon } from '@jupyterlab/ui-components';
 import { WidgetTracker, ICommandPalette } from '@jupyterlab/apputils';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import { CodeCell } from '@jupyterlab/cells';
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
-
+import { sessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
+import { CodeCell } from '@jupyterlab/cells';
 import {
   WidgetRenderer,
   registerWidgetManager
@@ -36,6 +36,7 @@ const PALETTE_CATEGORY = 'Blockly editor';
 
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
+//  export const copyToClipboard = 'blockly:copy-to-clipboard';
 }
 
 /**
@@ -44,10 +45,10 @@ namespace CommandIDs {
 const PLUGIN_ID = '@jupyterlab/translation-extension:plugin';
 
 /**
- * Initialization data for the jupyterlab-blocky extension.
+ * Initialization data for the jupyterlab-blockly extension.
  */
 const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
-  id: 'jupyterlab-blocky:plugin',
+  id: 'jupyterlab-blockly:plugin',
   autoStart: true,
   requires: [
     ILayoutRestorer,
@@ -72,10 +73,10 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     mainMenu: IMainMenu | null,
     widgetRegistry: IJupyterWidgetRegistry | null
   ): IBlocklyRegistry => {
-    console.log('JupyterLab extension jupyterlab-blocky is activated!');
+    console.log('JupyterLab extension jupyterlab-blockly is activated!');
 
     // Namespace for the tracker
-    const namespace = 'jupyterlab-blocky';
+    const namespace = 'jupyterlab-blockly';
 
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });
@@ -90,11 +91,12 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       });
     }
 
+    const trans = translator.load('jupyterlab');
     const { commands } = app;
 
     // Creating the widget factory to register it so the document manager knows about
     // our new DocumentWidget
-    const widgetFactory = new BlocklyEditorFactory({
+    const widgetFactory = new BlocklyEditorFactory(app, {
       name: FACTORY,
       modelName: 'text',
       fileTypes: ['blockly'],
@@ -105,7 +107,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       // that reason, we tell the widget factory to start a kernel session
       // when opening the editor, and close the session when closing the editor.
       canStartKernel: true,
-      preferKernel: true,
+      preferKernel: false,
       shutdownOnClose: true,
 
       // The rendermime instance, necessary to render the outputs
@@ -199,7 +201,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     if (launcher) {
       launcher.add({
         command: CommandIDs.createNew,
-        category: 'Other',
+        category: trans.__('Other'),
         rank: 1
       });
     }
@@ -232,10 +234,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
           return Promise.resolve(void 0);
         },
         restartKernel: current => {
-          const kernel = current.context.sessionContext.session?.kernel;
-          if (kernel) {
-            return kernel.restart();
-          }
+          sessionContextDialogs.restart(current.context.sessionContext, translator);
           return Promise.resolve(void 0);
         },
         shutdownKernel: current => current.context.sessionContext.shutdown()
@@ -272,4 +271,8 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
   }
 }
 
-export default plugin;
+//
+const plugins: JupyterFrontEndPlugin<any>[] = [
+  plugin,
+];
+export default plugins;

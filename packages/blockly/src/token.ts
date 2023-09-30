@@ -45,4 +45,13 @@ export interface IBlocklyRegistry {
    * If a generator already exists for the given language it is overwritten.
    */
   registerGenerator(language: string, generator: Blockly.Generator): void;
+
+  /**
+   * Register blocks codes.
+   *
+   * @argument language The name of the programming language. python, lua, javascript, ...
+   *
+   * @argument funcs Imported functions.
+   */
+  registerCodes(language: string, funcs: {[name: string]: Function}): void
 }

@@ -1,16 +1,16 @@
 {
-  "name": "jupyterlab-blockly-root",
+  "name": "jupyterlab-broccoli-root",
   "private": true,
-  "version": "0.3.0-alpha.4",
-  "description": "Blockly extension for JupyterLab.",
+  "version": "0.3.1",
+  "description": "Fork of Blockly extension for JupyterLab.",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/quantstack/jupyterlab-blockly",
+  "homepage": "https://github.com/fiseki/jupyterlab-broccoli",
   "bugs": {
-    "url": "https://github.com/quantstack/jupyterlab-blockly/issues"
+    "url": "https://github.com/fiseki/jupyterlab-broccoli/issues"
   },
   "license": "BSD-3-Clause",
   "author": {

@@ -3,6 +3,8 @@ import * as Blockly from 'blockly';
 import { pythonGenerator } from 'blockly/python';
 import { javascriptGenerator } from 'blockly/javascript';
 import { luaGenerator } from 'blockly/lua';
+import { dartGenerator } from 'blockly/dart';
+import { phpGenerator } from 'blockly/php';
 
 import En from 'blockly/msg/en';
 
@@ -20,6 +22,7 @@ import { BlockDefinition } from 'blockly/core/blocks';
 export class BlocklyRegistry implements IBlocklyRegistry {
   private _toolboxes: Map<string, ToolboxDefinition>;
   private _generators: Map<string, Blockly.Generator>;
+  private _language = "En";
 
   /**
    * Constructor of BlocklyRegistry.
@@ -27,11 +30,13 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   constructor() {
     this._toolboxes = new Map<string, ToolboxDefinition>();
     this._toolboxes.set('default', TOOLBOX);
-
+    //
     this._generators = new Map<string, Blockly.Generator>();
     this._generators.set('python', pythonGenerator);
     this._generators.set('javascript', javascriptGenerator);
     this._generators.set('lua', luaGenerator);
+    this._generators.set('dart', dartGenerator);
+    this._generators.set('php', phpGenerator);
   }
 
   /**
@@ -46,6 +51,13 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    */
   get generators(): Map<string, Blockly.Generator> {
     return this._generators;
+  }
+
+  /**
+   * Returns language (2 charactors).
+   */
+  get language(): string {
+    return this._language;
   }
 
   /**
@@ -82,7 +94,23 @@ export class BlocklyRegistry implements IBlocklyRegistry {
     this._generators.set(language, generator);
   }
 
+  /**
+   * Register blocks codes. 
+   *
+   * @argument language The name of the programming language. python, lua, javascript, ...
+   *
+   * @argument funcs Imported functions.
+   */
+  registerCodes(language: string, funcs: {[name: string]: Function}): void {
+    let generator = this._generators.get(language);
+    Object.assign(
+      generator,
+      funcs,
+    );
+  }
+
   setlanguage(language: string): void {
+    this._language = language;
     Private.importLanguageModule(language);
   }
 }

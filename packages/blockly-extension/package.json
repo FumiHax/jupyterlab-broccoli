@@ -1,15 +1,15 @@
 {
-  "name": "jupyterlab-blockly-extension",
-  "version": "0.3.0-alpha.4",
+  "name": "jupyterlab-broccoli-extension",
+  "version": "0.3.1",
   "description": "Blockly extension for JupyterLab.",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/quantstack/jupyterlab-blockly",
+  "homepage": "https://github.com/fiseki/jupyterlab-broccoli",
   "bugs": {
-    "url": "https://github.com/quantstack/jupyterlab-blockly/issues"
+    "url": "https://github.com/fiseki/jupyterlab-broccoli/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quantstack/jupyterlab-blockly.git"
+    "url": "https://github.com/quantstack/jupyterlab-broccoli.git"
   },
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
@@ -35,7 +35,7 @@
     "build:lib": "tsc",
     "clean": "jlpm clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-    "clean:labextension": "rimraf ../../jupyterlab_blockly/labextension",
+    "clean:labextension": "rimraf ../../jupyterlab_brocolli/labextension",
     "clean:all": "jlpm clean:lib && jlpm clean:labextension",
     "install:extension": "jlpm build",
     "watch": "run-p watch:src watch:labextension",
@@ -56,7 +56,7 @@
     "@jupyterlab/settingregistry": "^3.6",
     "@jupyterlab/translation": "^3.6",
     "@jupyterlab/ui-components": "^3.6",
-    "jupyterlab-blockly": "^0.3.0-alpha.4"
+    "jupyterlab-broccoli": "^0.3.1"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^3.6",
@@ -75,9 +75,9 @@
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "../../jupyterlab_blockly/labextension",
+    "outputDir": "../../jupyterlab_broccoli/labextension",
     "sharedPackages": {
-      "jupyterlab-blockly": {
+      "jupyterlab-broccoli": {
         "bundled": true,
         "singleton": true
       },
