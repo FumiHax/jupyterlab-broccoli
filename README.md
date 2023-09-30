@@ -1,6 +1,6 @@
 # jupyterlab-broccoli
 ## Broccoli
-* jupyterlab-broccoli is fork of **jupyterlab-blockly**
+* jupyterlab-broccoli is the fork of **jupyterlab-blockly**
   * Added several icons, including a save icon.
   * Added save confirmation dialog when close.
   * Added confirmation dialog for kernel restart.
