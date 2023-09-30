@@ -8,7 +8,7 @@ import type { ToolboxDefinition } from 'blockly/core/utils/toolbox';
  * The registry token.
  */
 export const IBlocklyRegistry = new Token<IBlocklyRegistry>(
-  'jupyterlab-blockly/registry'
+  'jupyterlab-broccoli/registry'
 );
 
 /**

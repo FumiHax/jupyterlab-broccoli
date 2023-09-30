@@ -21,9 +21,9 @@ import {
   registerWidgetManager
 } from '@jupyter-widgets/jupyterlab-manager';
 
-import { BlocklyEditorFactory } from 'jupyterlab-blockly';
-import { IBlocklyRegistry } from 'jupyterlab-blockly';
-import { BlocklyEditor } from 'jupyterlab-blockly';
+import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
+import { IBlocklyRegistry } from 'jupyterlab-broccoli';
+import { BlocklyEditor } from 'jupyterlab-broccoli';
 
 import { blockly_icon } from './icons';
 
@@ -45,10 +45,10 @@ namespace CommandIDs {
 const PLUGIN_ID = '@jupyterlab/translation-extension:plugin';
 
 /**
- * Initialization data for the jupyterlab-blockly extension.
+ * Initialization data for the jupyterlab-broccoli extension.
  */
 const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
-  id: 'jupyterlab-blockly:plugin',
+  id: 'jupyterlab-broccoli:plugin',
   autoStart: true,
   requires: [
     ILayoutRestorer,
@@ -73,10 +73,10 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     mainMenu: IMainMenu | null,
     widgetRegistry: IJupyterWidgetRegistry | null
   ): IBlocklyRegistry => {
-    console.log('JupyterLab extension jupyterlab-blockly is activated!');
+    console.log('JupyterLab extension jupyterlab-broccoli is activated!');
 
     // Namespace for the tracker
-    const namespace = 'jupyterlab-blockly';
+    const namespace = 'jupyterlab-broccoli';
 
     // Creating the tracker for the document
     const tracker = new WidgetTracker<BlocklyEditor>({ namespace });

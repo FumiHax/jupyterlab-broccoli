@@ -15,7 +15,7 @@ import { JupyterFrontEnd } from '@jupyterlab/application';
 
 /*
 namespace CommandIDs {
-  export const copyToClipboard = 'jupyterlab-blockly:copy-to-clipboard';
+  export const copyToClipboard = 'jupyterlab-broccoli:copy-to-clipboard';
 }
 /**/
 
