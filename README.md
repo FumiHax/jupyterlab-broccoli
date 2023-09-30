@@ -22,5 +22,5 @@
 * Copy to clipboard by right mouse button menu in Output View does not work either (jupyterlab-blockly bug).
 
 
-## jupyterlab_blockly
+## jupyterlab-blockly
 - https://github.com/QuantStack/jupyterlab-blockly
