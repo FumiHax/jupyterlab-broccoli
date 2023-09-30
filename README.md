@@ -10,15 +10,6 @@
   * Fixed a few bugs.
 * https://github.com/QuantStack/jupyterlab-blockly
 * Corresponding version is jupyterlab-blockly 0.3.0a
-## Usage
-```
-git clone https://github.com/fiseki/Jupyterlab-Broccoli.git
-cd Jupyterlab-Broccoli/
-./setup.sh
-cd jupyterlab-broccoli/
-jlpm build
-../run.sh
-```
 
 ## Screen Shot
 <img width="80%" src="https://github.com/fiseki/Jupyterlab-Broccoli/assets/95947474/98db3301-d557-43d2-9e08-f5e17163462b">
