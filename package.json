@@ -4,6 +4,7 @@
   "version": "0.3.1",
   "description": "Fork of Blockly extension for JupyterLab.",
   "keywords": [
+    "blockly",
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
@@ -14,8 +15,12 @@
   },
   "license": "BSD-3-Clause",
   "author": {
-    "name": "quantstack",
-    "email": ""
+    "name": "Fumi.Iseki",
+    "email": "iseki@rsch.tuis.ac.jp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fiseki/jupyterlab-broccoli"
   },
   "workspaces": {
     "packages": [
