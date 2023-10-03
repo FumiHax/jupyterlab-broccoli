@@ -13,8 +13,8 @@
   },
   "license": "BSD-3-Clause",
   "author": {
-    "name": "quantstack",
-    "email": ""
+    "name": "Fumi.Iseki",
+    "email": "iseki@rsch.tuis.ac.jp"
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
@@ -25,7 +25,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/quantstack/jupyterlab-broccoli.git"
+    "url": "https://github.com/fiseki/jupyterlab-broccoli.git"
   },
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
