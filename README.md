@@ -21,7 +21,7 @@ pip install jupyterlab-broccoli
 <img width="90%" src="https://user-images.githubusercontent.com/95947474/270168325-98db3301-d557-43d2-9e08-f5e17163462b.png">
 <br>
 <br>
-<img width="80%" src="https://github.com/fiseki/Jupyterlab-Broccoli/assets/95947474/edd7775e-46d5-4693-8659-6b47a581b968">
+<img width="90%" src="https://user-images.githubusercontent.com/95947474/270168337-edd7775e-46d5-4693-8659-6b47a581b968.png">
 
 ## Bugs
 * Sometimes (for example, when reloading) the layout of the screen is corrupted, so please reload or open the file again.
