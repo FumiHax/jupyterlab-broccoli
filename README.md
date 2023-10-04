@@ -10,6 +10,10 @@
   * Fixed a few bugs.
 * Corresponding version is jupyterlab-blockly 0.3.0a
   * https://github.com/QuantStack/jupyterlab-blockly
+## Install
+```
+pip install jupyterlab-broccoli
+```
 
 ## Screen Shot
 <img width="80%" src="https://github.com/fiseki/Jupyterlab-Broccoli/assets/95947474/98db3301-d557-43d2-9e08-f5e17163462b">
