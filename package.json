@@ -17,7 +17,7 @@
   "author": "Fumi.Iseki <iseki@rsch.tuis.ac.jp>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fiseki/jupyterlab-broccoli.git"
+    "url": "https://github.com/fiseki/jupyterlab-broccoli.git"
   },
   "workspaces": {
     "packages": [
