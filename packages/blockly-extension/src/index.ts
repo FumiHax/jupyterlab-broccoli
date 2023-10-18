@@ -251,11 +251,14 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       });
 
       tracker.widgetAdded.connect((sender, panel) => {
-        registerWidgetManager(
-          panel.context as any,
-          panel.content.rendermime,
-          widgetRenderers([panel.content.cell])
-        );
+        const kernel = panel.context.sessionContext.session?.kernel;
+        if (kernel) {
+          registerWidgetManager(
+            panel.context as any,
+            panel.content.rendermime,
+            widgetRenderers([panel.content.cell])
+          );
+        }
       });
     }
 
