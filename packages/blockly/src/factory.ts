@@ -55,8 +55,9 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
       execute: args => { 
         const output = this._cell.outputArea.outputTracker.currentWidget;
         if (output == null) return;
-        }
-        const outputAreaAreas = output.node.getElementsByClassName('jp-OutputArea-output';
+        //
+        const outputAreaAreas = output.node.getElementsByClassName('jp-OutputArea-output');
+        for (let key in 
         if (outputAreaAreas.length > 0) {
             const area = outputAreaAreas[0];
             copyElement(area as HTMLElement);
@@ -74,7 +75,6 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     function copyElement(e: HTMLElement): void {
       const sel = window.getSelection();
       if (sel == null) return;
-      }
 
       // Save the current selection.
       const savedRanges: Range[] = [];
