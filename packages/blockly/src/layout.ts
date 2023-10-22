@@ -73,10 +73,6 @@ export class BlocklyLayout extends SplitLayout {
     this._manager.changed.connect(this._onManagerChanged, this);
   }
 
-  get activeCell(): CodeCell {
-    return this._cell;
-  }
-
   /*
    * The code cell.
    */

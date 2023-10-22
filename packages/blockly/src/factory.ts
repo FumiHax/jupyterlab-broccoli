@@ -9,13 +9,14 @@ import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
 import { BlocklyEditor, BlocklyPanel } from './widget';
 import { BlocklyRegistry } from './registry';
 import { BlocklyManager } from './manager';
+import { CodeCell } from '@jupyterlab/cells';
 
 import { JupyterFrontEnd } from '@jupyterlab/application';
-//import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
+import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
-/*
+/**/
 namespace CommandIDs {
-  export const copyToClipboard = 'jupyterlab-broccoli:copy-to-clipboard';
+  export const copyToClipboard = 'broccoli:copy-to-clipboard';
 }
 /**/
 
@@ -30,8 +31,9 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
   private _rendermime: IRenderMimeRegistry;
   private _mimetypeService: IEditorMimeTypeService;
   private _manager: BlocklyManager;
-  //private _trans: TranslationBundle;
   private _app: JupyterFrontEnd;
+  private _cell: CodeCell;
+  private _trans: TranslationBundle;
 
   /**
    * Constructor of BlocklyEditorFactory.
@@ -44,12 +46,22 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     this._registry = new BlocklyRegistry();
     this._rendermime = options.rendermime;
     this._mimetypeService = options.mimetypeService;
-    //this._trans = (options.translator || nullTranslator).load('jupyterlab');
 
-/*
+    this._trans = (options.translator || nullTranslator).load('jupyterlab');
+
+    //
     app.commands.addCommand(CommandIDs.copyToClipboard, {
-      label: this._trans.__('ZZZZ Copy Output to Clipboard'),
-      execute: args => { alert("OK") }
+      label: this._trans.__('Copy Blockly Output to Clipboard'),
+      execute: args => { 
+        const output = this._cell.outputArea.outputTracker.currentWidget;
+        if (output == null) return;
+        }
+        const outputAreaAreas = output.node.getElementsByClassName('jp-OutputArea-output';
+        if (outputAreaAreas.length > 0) {
+            const area = outputAreaAreas[0];
+            copyElement(area as HTMLElement);
+        }
+      }
     });
 
     app.contextMenu.addItem({
@@ -57,8 +69,29 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
       selector: '.jp-OutputArea-child',
       rank: 0
     });
-/**/
 
+    //
+    function copyElement(e: HTMLElement): void {
+      const sel = window.getSelection();
+      if (sel == null) return;
+      }
+
+      // Save the current selection.
+      const savedRanges: Range[] = [];
+      for (let i = 0; i < sel.rangeCount; ++i) {
+        savedRanges[i] = sel.getRangeAt(i).cloneRange();
+      }
+
+      const range = document.createRange();
+      range.selectNodeContents(e);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy');
+
+      // Restore the saved selection.
+      sel.removeAllRanges();
+      savedRanges.forEach(r => sel.addRange(r));
+    }
   }
 
   get registry(): BlocklyRegistry {
@@ -89,6 +122,9 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     );
     this._manager = manager;
     const content = new BlocklyPanel(context, manager, this._rendermime);
+    //
+    this._cell = content.activeLayout.cell;
+
     return new BlocklyEditor(this._app, { context, content, manager });
   }
 }

@@ -22,8 +22,8 @@ import {
 } from '@jupyter-widgets/jupyterlab-manager';
 
 import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
-import { IBlocklyRegistry } from 'jupyterlab-broccoli';
 import { BlocklyEditor } from 'jupyterlab-broccoli';
+import { IBlocklyRegistry } from 'jupyterlab-broccoli';
 
 import { blockly_icon } from './icons';
 
@@ -36,7 +36,6 @@ const PALETTE_CATEGORY = 'Blockly editor';
 
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
-//  export const copyToClipboard = 'blockly:copy-to-clipboard';
 }
 
 /**
@@ -56,7 +55,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     IEditorServices,
     IFileBrowserFactory,
     ISettingRegistry,
-    ITranslator
+    ITranslator,
   ],
   optional: [ILauncher, ICommandPalette, IMainMenu, IJupyterWidgetRegistry],
   provides: IBlocklyRegistry,
@@ -279,3 +278,4 @@ const plugins: JupyterFrontEndPlugin<any>[] = [
   plugin,
 ];
 export default plugins;
+
