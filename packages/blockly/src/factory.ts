@@ -16,7 +16,7 @@ import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
 /**/
 namespace CommandIDs {
-  export const copyToClipboard = 'broccoli:copy-to-clipboard';
+  export const copyToClipboard = 'blockly:copy-to-clipboard';
 }
 /**/
 
@@ -53,14 +53,13 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     app.commands.addCommand(CommandIDs.copyToClipboard, {
       label: this._trans.__('Copy Blockly Output to Clipboard'),
       execute: args => { 
-        const output = this._cell.outputArea.outputTracker.currentWidget;
-        if (output == null) return;
-        //
-        const outputAreaAreas = output.node.getElementsByClassName('jp-OutputArea-output');
-        for (let key in 
+        const outputAreaAreas = this._cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
         if (outputAreaAreas.length > 0) {
-            const area = outputAreaAreas[0];
-            copyElement(area as HTMLElement);
+          let element = outputAreaAreas[0];
+          for (let i=1; i<outputAreaAreas.length; i++) {
+            element.appendChild(outputAreaAreas[i]);
+          }
+          copyElement(element as HTMLElement);
         }
       }
     });
@@ -75,19 +74,17 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     function copyElement(e: HTMLElement): void {
       const sel = window.getSelection();
       if (sel == null) return;
-
       // Save the current selection.
       const savedRanges: Range[] = [];
       for (let i = 0; i < sel.rangeCount; ++i) {
         savedRanges[i] = sel.getRangeAt(i).cloneRange();
       }
-
+      //
       const range = document.createRange();
       range.selectNodeContents(e);
       sel.removeAllRanges();
       sel.addRange(range);
       document.execCommand('copy');
-
       // Restore the saved selection.
       sel.removeAllRanges();
       savedRanges.forEach(r => sel.addRange(r));
