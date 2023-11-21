@@ -27,10 +27,6 @@ pip install jupyterlab-broccoli
 <br>
 <img width="90%" src="https://user-images.githubusercontent.com/95947474/270168337-edd7775e-46d5-4693-8659-6b47a581b968.png">
 
-## Bugs
-* Sometimes (for example, when reloading) the layout of the screen is corrupted, so please reload or open the file again.
-* %%Copy to clipboard by right mouse button menu in Output View does not work either (jupyterlab-blockly bug).%%
-
 
 
 ## jupyterlab-blockly
