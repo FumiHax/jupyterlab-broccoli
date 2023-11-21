@@ -1,5 +1,6 @@
 # jupyterlab-broccoli
-Fork of Jupyterlab-Blockly extension for JupyterLab
+JupyterLab Extension for Blockly 
+This is a fork of Jupyterlab-Blockly extension for JupyterLab
 
 ## Broccoli
 * jupyterlab-broccoli is the fork of **jupyterlab-blockly**
@@ -28,7 +29,8 @@ pip install jupyterlab-broccoli
 
 ## Bugs
 * Sometimes (for example, when reloading) the layout of the screen is corrupted, so please reload or open the file again.
-* Copy to clipboard by right mouse button menu in Output View does not work either (jupyterlab-blockly bug).
+* %%Copy to clipboard by right mouse button menu in Output View does not work either (jupyterlab-blockly bug).%%
+
 
 
 ## jupyterlab-blockly
