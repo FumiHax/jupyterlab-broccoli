@@ -1,4 +1,4 @@
-# jupyterlab-broccoli
+# jupyterlab-broccoli-4
 JupyterLab Extension for Blockly 
 This is a fork of Jupyterlab-Blockly extension for JupyterLab
 
@@ -19,7 +19,7 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
 pip install jupyterlab-broccoli
 ```
 ## Requirements
-* JupyterLab ^3.6,0
+* JupyterLab ^4.0,0
 
 ## Screen Shot
 <img width="90%" src="https://user-images.githubusercontent.com/95947474/270168325-98db3301-d557-43d2-9e08-f5e17163462b.png">
