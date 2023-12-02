@@ -28,7 +28,7 @@ import {
 import { CodeCell } from '@jupyterlab/cells';
 
 import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
-//import { SessionContextDialogs } from '@jupyterlab/apputils';
+import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { closeDialog } from './dialog';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 
@@ -46,7 +46,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   private _dirty = false;
 
   constructor(app: JupyterFrontEnd, options: BlocklyEditor.IOptions) {
-//  constructor(app: JupyterFrontEnd, options: DocumentWidget.IOptions<BlocklyPanel, DocumentModel>) {
     super(options);
 
     this._context = options.context;
@@ -262,8 +261,9 @@ export class BlocklyPanel extends SplitPanel {
     }
 
     if (kernelname === '') {
-      //SessionContextDialogs.selectKernel(this._context.sessionContext, (this._context as any).translator);
-      //SessionContextDialogs.selectKernel(this._context.sessionContext);
+      const sessionContextDialogs = new SessionContextDialogs();
+      sessionContextDialogs.selectKernel(this._context.sessionContext);
+      //sessionContextDialogs.selectKernel(this._context.sessionContext, (this._context as any).translator);
     }
     else {
       this._manager.selectKernel(kernelname);
