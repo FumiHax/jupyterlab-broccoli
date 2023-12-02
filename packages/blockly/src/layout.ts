@@ -2,6 +2,8 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
 import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
 
+import { NBTestUtils } from '@jupyterlab/cells/lib/testutils';
+
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
 import { DockPanel } from '@lumino/widgets';
@@ -52,7 +54,7 @@ export class BlocklyLayout extends SplitLayout {
     // outputs from the execution reply.
     this._cell = new CodeCell({
       model: new CodeCellModel({}),
-      contentFactory: null,
+      contentFactory: NBTestUtils.createCodeCellFactory(),
       rendermime
     });
     // Trust the outputs and set the mimeType for the code
