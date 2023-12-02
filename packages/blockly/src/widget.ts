@@ -46,6 +46,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   private _dirty = false;
 
   constructor(app: JupyterFrontEnd, options: BlocklyEditor.IOptions) {
+//  constructor(app: JupyterFrontEnd, options: DocumentWidget.IOptions<BlocklyPanel, DocumentModel>) {
     super(options);
 
     this._context = options.context;

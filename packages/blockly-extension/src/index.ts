@@ -13,7 +13,7 @@ import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IMainMenu } from '@jupyterlab/mainmenu';
 //import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
-//import { sessionContextDialogs } from '@jupyterlab/apputils';
+//import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
 /*
@@ -61,7 +61,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     ITranslator,
   ],
   optional: [ILauncher, ICommandPalette, IMainMenu, IJupyterWidgetRegistry],
-//  provides: IBlocklyRegistry,
+  //provides: IBlocklyRegistry,
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
@@ -237,7 +237,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
           return Promise.resolve(void 0);
         },
         restartKernel: current => {
-          sessionContextDialogs.restart(current.context.sessionContext, translator);
+          SessionContextDialogs.restart(current.context.sessionContext, translator);
           return Promise.resolve(void 0);
         },
         shutdownKernel: current => current.context.sessionContext.shutdown()

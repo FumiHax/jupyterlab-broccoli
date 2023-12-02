@@ -1,6 +1,6 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
-import { KernelSpec, KernelConnection } from '@jupyterlab/services';
+import { KernelSpec, Kernel } from '@jupyterlab/services';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 
 import { ISignal, Signal } from '@lumino/signaling';
@@ -203,7 +203,7 @@ export class BlocklyManager {
 
   private _onKernelChanged(
     sender: ISessionContext,
-    args: IChangedArgs<KernelConnection, KernelConnection, 'kernel'>
+    args: IChangedArgs<Kernel.IKernelConnection, Kernel.IKernelConnection, 'kernel'>
   ): void {
     const specs = this._sessionContext.specsManager.specs.kernelspecs;
     if (args.newValue && specs[args.newValue.name] !== undefined) {
