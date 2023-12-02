@@ -1,15 +1,15 @@
 {
   "name": "jupyterlab-broccoli-extension",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Blockly extension for JupyterLab.",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/fiseki/jupyterlab-broccoli",
+  "homepage": "https://github.com/FumiHax/jupyterlab-broccoli",
   "bugs": {
-    "url": "https://github.com/fiseki/jupyterlab-broccoli/issues"
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fiseki/jupyterlab-broccoli.git"
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli.git"
   },
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
@@ -43,27 +43,31 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^4 || ^5",
-    "@jupyter-widgets/jupyterlab-manager": "^3.0.0",
-    "@jupyterlab/application": "^3.6",
-    "@jupyterlab/apputils": "^3.6",
-    "@jupyterlab/cells": "^3.6",
-    "@jupyterlab/codeeditor": "^3.6",
-    "@jupyterlab/filebrowser": "^3.6",
-    "@jupyterlab/launcher": "^3.6",
-    "@jupyterlab/mainmenu": "^3.6",
-    "@jupyterlab/rendermime": "^3.6",
-    "@jupyterlab/settingregistry": "^3.6",
-    "@jupyterlab/translation": "^3.6",
-    "@jupyterlab/ui-components": "^3.6",
-    "jupyterlab-broccoli": "^0.3.5"
+    "@jupyter-widgets/base": "^6.0",
+    "@jupyterlab/application": "^4.0",
+    "@jupyterlab/apputils": "^4.0",
+    "@jupyterlab/cells": "^4.0",
+    "@jupyterlab/codeeditor": "^4.0",
+    "@jupyterlab/filebrowser": "^4.0",
+    "@jupyterlab/launcher": "^4.0",
+    "@jupyterlab/mainmenu": "^4.0",
+    "@jupyterlab/rendermime": "^4.0",
+    "@jupyterlab/settingregistry": "^4.0.9",
+    "@jupyterlab/translation": "^4.0",
+    "@jupyterlab/ui-components": "^4.0",
+    "@lumino/algorithm": "^1.9.1",
+    "@lumino/coreutils": "^1.12.0",
+    "@lumino/signaling": "^1.10.1",
+    "@rjsf/utils": "^5.13.2",
+    "@types/react": "^18.0.26",
+    "jupyterlab-broccoli": "^0.4"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^3.6",
+    "@jupyterlab/builder": "^4.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^4.4.0",
     "source-map-loader": "^4.0.1",
-    "typescript": "~3.9.0"
+    "typescript": "~4.9.5"
   },
   "sideEffects": [
     "style/*.css",
@@ -86,10 +90,6 @@
         "singleton": true
       },
       "@jupyter-widgets/base": {
-        "bundled": false,
-        "singleton": true
-      },
-      "@jupyter-widgets/jupyterlab-manager": {
         "bundled": false,
         "singleton": true
       }

@@ -11,15 +11,18 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
-import { sessionContextDialogs } from '@jupyterlab/apputils';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+//import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
+//import { sessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
+/*
 import { CodeCell } from '@jupyterlab/cells';
 import {
   WidgetRenderer,
   registerWidgetManager
 } from '@jupyter-widgets/jupyterlab-manager';
+*/
 
 import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
 import { BlocklyEditor } from 'jupyterlab-broccoli';
@@ -58,7 +61,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     ITranslator,
   ],
   optional: [ILauncher, ICommandPalette, IMainMenu, IJupyterWidgetRegistry],
-  provides: IBlocklyRegistry,
+//  provides: IBlocklyRegistry,
   activate: (
     app: JupyterFrontEnd,
     restorer: ILayoutRestorer,
@@ -215,6 +218,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     }
 
     // Add the command to the main menu
+/*
     if (mainMenu) {
       mainMenu.kernelMenu.kernelUsers.add({
         tracker,
@@ -239,7 +243,9 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         shutdownKernel: current => current.context.sessionContext.shutdown()
       } as IKernelMenu.IKernelUser<BlocklyEditor>);
     }
+*/
 
+/*
     if (widgetRegistry) {
       tracker.forEach(panel => {
         registerWidgetManager(
@@ -260,11 +266,13 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         }
       });
     }
+*/
 
     return widgetFactory.registry;
   }
 };
 
+/*
 function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
   for (const w of cells) {
     if (w instanceof WidgetRenderer) {
@@ -272,6 +280,7 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
     }
   }
 }
+*/
 
 //
 const plugins: JupyterFrontEndPlugin<any>[] = [

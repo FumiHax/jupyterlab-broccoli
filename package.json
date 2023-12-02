@@ -1,7 +1,7 @@
 {
   "name": "jupyterlab-broccoli-root",
   "private": true,
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "Fork of blockly extension for JupyterLab.",
   "keywords": [
     "blockly",
@@ -9,15 +9,15 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/fiseki/jupyterlab-broccoli",
+  "homepage": "https://github.com/FumiHax/jupyterlab-broccoli",
   "bugs": {
-    "url": "https://github.com/fiseki/jupyterlab-broccoli/issues"
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli/issues"
   },
   "license": "BSD-3-Clause",
   "author": "Fumi.Iseki <iseki@rsch.tuis.ac.jp>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fiseki/jupyterlab-broccoli.git"
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli.git"
   },
   "workspaces": {
     "packages": [

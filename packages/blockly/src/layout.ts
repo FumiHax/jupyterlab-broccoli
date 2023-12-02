@@ -52,7 +52,8 @@ export class BlocklyLayout extends SplitLayout {
     // outputs from the execution reply.
     this._cell = new CodeCell({
       model: new CodeCellModel({}),
-      rendermime
+      rendermime,
+      contentFactory: null
     });
     // Trust the outputs and set the mimeType for the code
     this._cell.addClass('jp-blockly-codeCell');
