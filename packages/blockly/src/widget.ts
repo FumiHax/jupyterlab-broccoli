@@ -28,7 +28,7 @@ import {
 import { CodeCell } from '@jupyterlab/cells';
 
 import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
-import { SessionContextDialogs } from '@jupyterlab/apputils';
+//import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { closeDialog } from './dialog';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 
@@ -159,6 +159,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   ) {
 
     if (change === 'dirty') {
+      this._blayout.setupWidgetView();
       this.dirty(true);
     }
     else if (change === 'focus') {
@@ -261,8 +262,8 @@ export class BlocklyPanel extends SplitPanel {
     }
 
     if (kernelname === '') {
-      const sessionContextDialogs = new SessionContextDialogs();
-      sessionContextDialogs.selectKernel(this._context.sessionContext);
+      //const sessionContextDialogs = new SessionContextDialogs();
+      //sessionContextDialogs.selectKernel(this._context.sessionContext);
       //sessionContextDialogs.selectKernel(this._context.sessionContext, (this._context as any).translator);
     }
     else {

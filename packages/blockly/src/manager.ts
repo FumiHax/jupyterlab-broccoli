@@ -63,8 +63,12 @@ export class BlocklyManager {
       }
     });
 
+    //
     this._shell = this._app.shell as ILabShell;
     this._shell.currentChanged.connect((_, change) => {
+      this._changed.emit('focus');
+    });
+    this._shell.activeChanged.connect((_, change) => {
       this._changed.emit('focus');
     });
   }

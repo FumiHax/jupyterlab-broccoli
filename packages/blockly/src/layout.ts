@@ -2,12 +2,10 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
 import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
 
-import { NBTestUtils } from '@jupyterlab/cells/lib/testutils';
-
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
 import { DockPanel } from '@lumino/widgets';
-import { IIterator, ArrayIterator } from '@lumino/algorithm';
+//import { IIterator, ArrayIterator } from '@lumino/algorithm';
 import { Signal } from '@lumino/signaling';
 
 import * as Blockly from 'blockly';
@@ -19,6 +17,13 @@ import {
   codeIcon,
   circleIcon,
 } from '@jupyterlab/ui-components';
+
+import { Cell } from '@jupyterlab/cells';
+import {
+  CodeMirrorEditorFactory,
+//  CodeMirrorMimeTypeService,
+  EditorLanguageRegistry
+} from '@jupyterlab/codemirror';
 
 /**
  * A blockly layout to host the Blockly editor.
@@ -52,11 +57,30 @@ export class BlocklyLayout extends SplitLayout {
 
     // Creating a CodeCell widget to render the code and
     // outputs from the execution reply.
+    const languages = new EditorLanguageRegistry();
+    const factoryService = new CodeMirrorEditorFactory({ languages });
+    //const editorFactory = factoryService.newInlineEditor.bind(factoryService);
+    //const editorFactory = factoryService.newDocumentEditor.bind(factoryService);
+    //const editorFactory = InputArea.defaultEditorFactory();
+
     this._cell = new CodeCell({
       model: new CodeCellModel({}),
-      contentFactory: NBTestUtils.createCodeCellFactory(),
+      //contentFactory: NBTestUtils.createCodeCellFactory(),
+      //contentFactory: NBTestUtils.createNotebookFactory(),
+      //contentFactory: new Cell.ContentFactory({ editorFactory }),
+      //contentFactory: (new OutputAreaModel()).contentFactory as IContentFactory,
+      //contentFactory: new CodeCellModel({}).factory,
+      //contentFactory: Cell.defaultContentFactory,
+      //contentFactory: new ContentFactory(),
+      //contentFactory: InputArea.ContentFactory,
+      //contentFactory: CodeCellModel.defaultContentFactory,
+      contentFactory: new Cell.ContentFactory({
+        editorFactory: factoryService.newInlineEditor.bind(factoryService)
+        //editorFactory: factoryService.newDocumentEditor.bind(factoryService)
+      }),
       rendermime
     });
+
     // Trust the outputs and set the mimeType for the code
     this._cell.addClass('jp-blockly-codeCell');
     this._cell.readOnly = true;
@@ -66,12 +90,12 @@ export class BlocklyLayout extends SplitLayout {
     // we should make it work with the css class
     this._cell.node.style.overflow = 'scroll';
     this._cell.title.icon = codeIcon;
-    this._cell.title.label = 'Code View';
+    this._cell.title.label = '_Code View';
     //
     this._cell.outputArea.node.style.overflow = 'scroll';
     this._cell.outputArea.node.style.cssText = 'border: 0px;';
     this._cell.outputArea.title.icon = circleIcon;
-    this._cell.outputArea.title.label = 'Output View';
+    this._cell.outputArea.title.label = '_Output View';
     //
     this._manager.changed.connect(this._onManagerChanged, this);
   }
@@ -123,9 +147,9 @@ export class BlocklyLayout extends SplitLayout {
   /**
    * Create an iterator over the widgets in the layout.
    */
-  iter(): IIterator<Widget> {
-    return new ArrayIterator([]);
-  }
+  //iter(): IIterator<Widget> {
+  //  return new ArrayIterator([]);
+  //}
 
   /**
    * Remove a widget from the layout.
@@ -276,8 +300,9 @@ export class BlocklyLayout extends SplitLayout {
       else if (this._finishedLoading && (
           event.type == Blockly.Events.BLOCK_CHANGE ||
           event.type == Blockly.Events.BLOCK_CREATE ||
-          event.type == Blockly.Events.BLOCK_DELETE ||
-          event.type == Blockly.Events.BLOCK_MOVE)) {
+          //event.type == Blockly.Events.BLOCK_MOVE   ||
+          event.type == Blockly.Events.BLOCK_DELETE))
+     { 
         // dirty workspace
         this._manager.dirty(true);
       }
