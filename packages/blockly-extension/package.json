@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-broccoli-extension",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Blockly extension for JupyterLab.",
   "keywords": [
     "jupyter",

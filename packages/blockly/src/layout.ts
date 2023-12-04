@@ -63,12 +63,12 @@ export class BlocklyLayout extends SplitLayout {
     // we should make it work with the css class
     this._cell.node.style.overflow = 'scroll';
     this._cell.title.icon = codeIcon;
-    this._cell.title.label = 'Code View';
+    this._cell.title.label = '_Code View';
     //
     this._cell.outputArea.node.style.overflow = 'scroll';
     this._cell.outputArea.node.style.cssText = 'border: 0px;';
     this._cell.outputArea.title.icon = circleIcon;
-    this._cell.outputArea.title.label = 'Output View';
+    this._cell.outputArea.title.label = '_Output View';
     //
     this._manager.changed.connect(this._onManagerChanged, this);
   }
