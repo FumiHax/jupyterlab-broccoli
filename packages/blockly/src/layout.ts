@@ -22,8 +22,9 @@ import { Cell } from '@jupyterlab/cells';
 import {
   CodeMirrorEditorFactory,
 //  CodeMirrorMimeTypeService,
-  EditorLanguageRegistry
-} from '@jupyterlab/codemirror';
+//  EditorLanguageRegistry
+} from '@jupyterlab/codemirror'
+
 
 /**
  * A blockly layout to host the Blockly editor.
@@ -57,26 +58,11 @@ export class BlocklyLayout extends SplitLayout {
 
     // Creating a CodeCell widget to render the code and
     // outputs from the execution reply.
-    const languages = new EditorLanguageRegistry();
-    const factoryService = new CodeMirrorEditorFactory({ languages });
-    //const editorFactory = factoryService.newInlineEditor.bind(factoryService);
-    //const editorFactory = factoryService.newDocumentEditor.bind(factoryService);
-    //const editorFactory = InputArea.defaultEditorFactory();
-
+    const factoryService = new CodeMirrorEditorFactory({});
     this._cell = new CodeCell({
       model: new CodeCellModel({}),
-      //contentFactory: NBTestUtils.createCodeCellFactory(),
-      //contentFactory: NBTestUtils.createNotebookFactory(),
-      //contentFactory: new Cell.ContentFactory({ editorFactory }),
-      //contentFactory: (new OutputAreaModel()).contentFactory as IContentFactory,
-      //contentFactory: new CodeCellModel({}).factory,
-      //contentFactory: Cell.defaultContentFactory,
-      //contentFactory: new ContentFactory(),
-      //contentFactory: InputArea.ContentFactory,
-      //contentFactory: CodeCellModel.defaultContentFactory,
       contentFactory: new Cell.ContentFactory({
-        editorFactory: factoryService.newInlineEditor.bind(factoryService)
-        //editorFactory: factoryService.newDocumentEditor.bind(factoryService)
+        editorFactory: factoryService.newInlineEditor
       }),
       rendermime
     });
@@ -147,9 +133,11 @@ export class BlocklyLayout extends SplitLayout {
   /**
    * Create an iterator over the widgets in the layout.
    */
-  //iter(): IIterator<Widget> {
-  //  return new ArrayIterator([]);
-  //}
+/*
+  iter(): IIterator<Widget> {
+    return new ArrayIterator([]);
+  }
+*/
 
   /**
    * Remove a widget from the layout.
@@ -300,9 +288,9 @@ export class BlocklyLayout extends SplitLayout {
       else if (this._finishedLoading && (
           event.type == Blockly.Events.BLOCK_CHANGE ||
           event.type == Blockly.Events.BLOCK_CREATE ||
-          //event.type == Blockly.Events.BLOCK_MOVE   ||
+          //event.type == Blockly.Events.BLOCK_MOVE)) ||
           event.type == Blockly.Events.BLOCK_DELETE))
-     { 
+      {
         // dirty workspace
         this._manager.dirty(true);
       }

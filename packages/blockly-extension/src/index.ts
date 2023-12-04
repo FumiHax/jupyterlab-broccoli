@@ -237,9 +237,8 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
           return Promise.resolve(void 0);
         },
         restartKernel: current => {
-          const sessionContextDialogs = new SessionContextDialogs();
+          const = new SessionContextDialogs({translator});
           sessionContextDialogs.restart(current.context.sessionContext);
-          //sessionContextDialogs.restart(current.context.sessionContext, translator);
           return Promise.resolve(void 0);
         },
         shutdownKernel: current => current.context.sessionContext.shutdown()

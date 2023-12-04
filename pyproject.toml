@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab~=4.0"]
+requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=3.6"]
 
 [project]
 name = "jupyterlab_broccoli"
@@ -23,8 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-	"jupyterlab~=4.0",
-    "jupyterlab_widgets~=1.1"
+	"jupyterlab>= 3.6",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
@@ -71,7 +70,7 @@ version-cmd = "python scripts/bump-version.py --force"
 
 [tool.jupyter-releaser.hooks]
 before-bump-version = [
-    "python -m pip install --pre -U jupyterlab~=4.0",
+    "python -m pip install --pre -U jupyterlab>=3.6",
     "jlpm"
 ]
 before-build-npm = [
