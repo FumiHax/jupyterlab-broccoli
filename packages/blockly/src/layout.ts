@@ -149,6 +149,7 @@ export class BlocklyLayout extends SplitLayout {
     this._cell.outputArea.title.icon = circleIcon;
     this._cell.outputArea.node.style.overflow = 'scroll';
     this._cell.outputArea.node.style.marginTop = '40px';
+    this._cell.outputArea.node.style.paddingBottom = '100px';
     this._cell.outputArea.node.style.border = '0px';
 
 //http://alphasis.info/javascript/dom/styleobject/
