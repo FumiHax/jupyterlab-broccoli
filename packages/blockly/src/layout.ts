@@ -51,8 +51,8 @@ export class BlocklyLayout extends SplitLayout {
   private _cell: CodeCell;
 //  private _inpt: InputArea;
 //  private _output: SimplifiedOutputArea;
-  private _output_style: string;
-  private _code_style: string;
+//  private _output_style: string;
+//  private _code_style: string;
   private _finishedLoading = false;
   private _dock;
 
@@ -68,9 +68,6 @@ export class BlocklyLayout extends SplitLayout {
     super({ renderer: SplitPanel.defaultRenderer, orientation: 'horizontal' });
     this._manager = manager;
     this._sessionContext = sessionContext;
-    this._output_style = 'top: 40px; border: 0px;'
-    this._code_style   = 'overflow: scroll; font-family: var(--jp-code-font-family); font-size: var(--jp-code-font-size); font-weight: bold; top: 40px; left: 40px; white-space: pre; border: 0px;'
-
 /*
     --jp-code-font-size: 13px;
     --jp-code-line-height: 1.3077;
@@ -141,25 +138,36 @@ export class BlocklyLayout extends SplitLayout {
 
     // Trust the outputs and set the mimeType for the code
     this._cell.addClass('jp-blockly-codeCell');
+    this._cell.title.label = '_Code View';
+    this._cell.title.icon = codeIcon;
     this._cell.readOnly = true;
     this._cell.model.trusted = true;
     this._cell.model.mimeType = this._manager.mimeType;
     this._cell.node.style.overflow = 'scroll';
-    this._cell.node.style.cssText = this._code_style;
-    this._cell.title.icon = codeIcon;
-    this._cell.title.label = '_Code View';
     //
-    this._cell.outputArea.node.style.overflow = 'scroll';
-    this._cell.outputArea.node.style.cssText = this._output_style;
-    this._cell.outputArea.title.icon = circleIcon;
     this._cell.outputArea.title.label = '_Output View';
+    this._cell.outputArea.title.icon = circleIcon;
+    this._cell.outputArea.node.style.overflow = 'scroll';
+    this._cell.outputArea.node.style.marginTop = '40px';
+    this._cell.outputArea.node.style.border = '0px';
 
+//http://alphasis.info/javascript/dom/styleobject/
+//https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
     this._code = new Widget();
     this._code.addClass('jp-blockly-displayCell');
-    this._code.node.style.overflow = 'scroll';
-    this._code.node.style.cssText = this._code_style;
     this._code.title.icon = codeIcon;
     this._code.title.label = '_Code View';
+    this._code.node.style.height = '100%';
+    //this._code.node.style.overflow = 'scroll';
+    this._code.node.style.overflowY = 'scroll';
+    this._code.node.style.fontSize = 'var(--jp-code-font-size)';
+    this._code.node.style.fontFamily = 'var(--jp-code-font-family)';
+    this._code.node.style.fontWeight = 'bold';
+    this._code.node.style.marginTop = '40px';
+    this._code.node.style.paddingLeft = '80px';
+    this._code.node.style.paddingBottom = '100px';
+    this._code.node.style.border = '0px';
+    this._code.node.style.whiteSpace = 'pre';
 /*
     // InputArea of code
     this._inpt = new InputArea({
@@ -323,8 +331,6 @@ export class BlocklyLayout extends SplitLayout {
       extra_init + this._manager.generator.workspaceToCode(this._workspace);
     //const code = "import ipywidgets as widgets\nwidgets.IntSlider()";
     this._cell.model.sharedModel.setSource(code);
-    this._code.node.style.overflow = 'scroll';
-    this._code.node.style.cssText = this._code_style;
     this._code.node.innerText = code;
 
     // Execute the code using the kernel, by using a static method from the
@@ -342,9 +348,11 @@ export class BlocklyLayout extends SplitLayout {
         .then(() => this._resizeWorkspace())
         .catch(e => console.error(e));
       //
+/*
       let style = this._cell.outputArea.node.style.cssText;
       if (!style.includes('top: ')) this._cell.outputArea.node.style.cssText  +=  this._output_style;
       else this._cell.outputArea.node.style.cssText = style.replace('top: 26px;', this._output_style);
+*/
 
       // focus outputArea
       this._dock.activateWidget(this._cell.outputArea);
@@ -418,7 +426,6 @@ export class BlocklyLayout extends SplitLayout {
       // Serializing our workspace into the chosen language generator.
       const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
-      this._code.node.style.cssText = this._code_style;
       this._code.node.innerText = code;
       //
       if (event.type == Blockly.Events.FINISHED_LOADING) {
@@ -452,7 +459,6 @@ export class BlocklyLayout extends SplitLayout {
       const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
       this._cell.model.mimeType = this._manager.mimeType;
-      this._code.node.style.cssText = this._code_style;
       this._code.node.innerText = code;
     }
     else if (change === 'toolbox') {
