@@ -69,7 +69,7 @@ export class BlocklyLayout extends SplitLayout {
     this._manager = manager;
     this._sessionContext = sessionContext;
     this._output_style = 'top: 40px; border: 0px;'
-    this._code_style   = 'font-family: var(--jp-code-font-family); font-size: var(--jp-code-font-size); font-weight: bold; top: 40px; left: 40px; white-space: pre; border: 0px;'
+    this._code_style   = 'overflow: scroll; font-family: var(--jp-code-font-family); font-size: var(--jp-code-font-size); font-weight: bold; top: 40px; left: 40px; white-space: pre; border: 0px;'
 
 /*
     --jp-code-font-size: 13px;
@@ -323,6 +323,7 @@ export class BlocklyLayout extends SplitLayout {
       extra_init + this._manager.generator.workspaceToCode(this._workspace);
     //const code = "import ipywidgets as widgets\nwidgets.IntSlider()";
     this._cell.model.sharedModel.setSource(code);
+    this._code.node.style.overflow = 'scroll';
     this._code.node.style.cssText = this._code_style;
     this._code.node.innerText = code;
 
