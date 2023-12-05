@@ -164,7 +164,7 @@ export class BlocklyLayout extends SplitLayout {
     this._code.node.style.fontFamily = 'var(--jp-code-font-family)';
     this._code.node.style.fontWeight = 'bold';
     this._code.node.style.marginTop = '40px';
-    this._code.node.style.paddingLeft = '80px';
+    this._code.node.style.paddingLeft = '60px';
     this._code.node.style.paddingBottom = '100px';
     this._code.node.style.border = '0px';
     this._code.node.style.whiteSpace = 'pre';
