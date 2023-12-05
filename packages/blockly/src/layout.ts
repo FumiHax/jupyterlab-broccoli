@@ -41,6 +41,7 @@ export class BlocklyLayout extends SplitLayout {
   private _sessionContext: ISessionContext;
   private _cell: CodeCell;
   private _inpt: InputArea;
+  private _output_top_px: string
   private _finishedLoading = false;
   private _dock;
 
@@ -56,6 +57,7 @@ export class BlocklyLayout extends SplitLayout {
     super({ renderer: SplitPanel.defaultRenderer, orientation: 'horizontal' });
     this._manager = manager;
     this._sessionContext = sessionContext;
+    this._output_top_px = 'top: 40px; border: 0px;'
 
     // Creating the container for the Blockly editor
     // and the output area to render the execution replies.
@@ -230,14 +232,16 @@ export class BlocklyLayout extends SplitLayout {
         `
       );
     } else {
-      this._dock.activateWidget(this._cell.outputArea);
-      //
       CodeCell.execute(this._cell, this._sessionContext)
         .then(() => this._resizeWorkspace())
         .catch(e => console.error(e));
       //
       let style = this._cell.outputArea.node.style.cssText;
-      this._cell.outputArea.node.style.cssText = style.replace('top: 26px;', 'top: 40px; border: 0px;');
+      if (!style.includes('top: ')) this._cell.outputArea.node.style.cssText  +=  this._output_top_px;
+      else this._cell.outputArea.node.style.cssText = style.replace('top: 26px;', this._output_top_px);
+
+      // focus outputArea
+      this._dock.activateWidget(this._cell.outputArea);
     }
   }
 
@@ -316,7 +320,7 @@ export class BlocklyLayout extends SplitLayout {
       else if (this._finishedLoading && (
           event.type == Blockly.Events.BLOCK_CHANGE ||
           event.type == Blockly.Events.BLOCK_CREATE ||
-          //event.type == Blockly.Events.BLOCK_MOVE)) ||
+          event.type == Blockly.Events.BLOCK_MOVE   ||
           event.type == Blockly.Events.BLOCK_DELETE))
       {
         // dirty workspace
