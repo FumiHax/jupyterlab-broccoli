@@ -2761,9 +2761,9 @@ __metadata:
   linkType: hard
 
 "acorn-walk@npm:^8.0.2":
-  version: 8.3.0
-  resolution: "acorn-walk@npm:8.3.0"
-  checksum: 15ea56ab6529135be05e7d018f935ca80a572355dd3f6d3cd717e36df3346e0f635a93ae781b1c7942607693e2e5f3ef81af5c6fc697bbadcc377ebda7b7f5f6
+  version: 8.3.1
+  resolution: "acorn-walk@npm:8.3.1"
+  checksum: 5c8926ddb5400bc825b6baca782931f9df4ace603ba1a517f5243290fd9cdb089d52877840687b5d5c939591ebc314e2e63721514feaa37c6829c828f2b940ce
   languageName: node
   linkType: hard
 
@@ -4256,9 +4256,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.603
-  resolution: "electron-to-chromium@npm:1.4.603"
-  checksum: 4d81f73c0f7e5e6c9374b6ada0b5f85acf2c71cacf4d169c56d350387516a932da0f68bff81cfda62ef7f9365b5092586b9a0a364b5051dcc3a5bb0ae75a61b0
+  version: 1.4.605
+  resolution: "electron-to-chromium@npm:1.4.605"
+  checksum: 2d42afd5d8cfc053d68944891f02fb007931fae85c0a19bc4f458bb3430e793b8a76664b058e1b06ab99e784f73e4c6b56493eaede2ff6012dbcaf8781fec4a7
   languageName: node
   linkType: hard
 
@@ -5520,6 +5520,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight.js@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "highlight.js@npm:11.9.0"
+  checksum: 4043d31c5de9d27d13387d9a9e5e1939557254b7b85f0fab85d9cae0e420e131a3456ebf6148552020a1d8a216d671d583f2433d6c4de6179b8a66487a8325cb
+  languageName: node
+  linkType: hard
+
 "hosted-git-info@npm:^2.1.4":
   version: 2.8.9
   resolution: "hosted-git-info@npm:2.8.9"
@@ -6590,6 +6597,7 @@ __metadata:
     "@lumino/widgets": ^2.3.1
     "@types/react": ^18.2.41
     blockly: ^9.2.1
+    highlight.js: ^11.9.0
     rimraf: ^4.4.0
     typescript: ~4.9.5
   languageName: unknown
