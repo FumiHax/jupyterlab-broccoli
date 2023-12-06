@@ -16,7 +16,8 @@ import JuliaLang from 'highlight.js/lib/languages/julia';
 import RLang from 'highlight.js/lib/languages/r';
 import XmlLang from 'highlight.js/lib/languages/xml';
 
-import 'highlight.js/styles/github.css';
+//import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/googlecode.css';
 
 //declare function require(string): any;
 
@@ -62,17 +63,20 @@ export class SourceCodeWidget extends Widget {
 
   //
   setLanguage(lang: string) {
-    if (lang=='python') HLjs.registerLanguage(lang, PythonLang);
-    else if (lang=='php') HLjs.registerLanguage(lang, PHPLang);
-    else if (lang=='lua') HLjs.registerLanguage(lang, LuaLang);
-    else if (lang=='dart') HLjs.registerLanguage(lang, DartLang);
-    else if (lang=='js') HLjs.registerLanguage(lang, JsLang);
-    else if (lang=='ts') HLjs.registerLanguage(lang, TsLang);
-    else if (lang=='c') HLjs.registerLanguage(lang, CLang);
-    else if (lang=='cpp') HLjs.registerLanguage(lang, CppLang);
-    else if (lang=='julia') HLjs.registerLanguage(lang, JuliaLang);
-    else if (lang=='r') HLjs.registerLanguage(lang, RLang);
-    else if (lang=='xml') HLjs.registerLanguage(lang, XmlLang);
+    //
+    HLjs.initHighlighting();
+    //
+    if      (lang=='python') HLjs.registerLanguage(lang, PythonLang);
+    else if (lang=='php')    HLjs.registerLanguage(lang, PHPLang);
+    else if (lang=='lua')    HLjs.registerLanguage(lang, LuaLang);
+    else if (lang=='dart')   HLjs.registerLanguage(lang, DartLang);
+    else if (lang=='js')     HLjs.registerLanguage(lang, JsLang);
+    else if (lang=='ts')     HLjs.registerLanguage(lang, TsLang);
+    else if (lang=='c')      HLjs.registerLanguage(lang, CLang);
+    else if (lang=='cpp')    HLjs.registerLanguage(lang, CppLang);
+    else if (lang=='julia')  HLjs.registerLanguage(lang, JuliaLang);
+    else if (lang=='r')      HLjs.registerLanguage(lang, RLang);
+    else if (lang=='xml')    HLjs.registerLanguage(lang, XmlLang);
     //
     this._language = lang;
   }
