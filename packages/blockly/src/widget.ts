@@ -9,7 +9,10 @@ import {
   runIcon,
   stopIcon,
   saveIcon,
-  circleEmptyIcon,
+  //circleEmptyIcon,
+  clearIcon,
+  copyIcon,
+  duplicateIcon
 } from '@jupyterlab/ui-components';
 
 import { SplitPanel } from '@lumino/widgets';
@@ -31,6 +34,9 @@ import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { closeDialog } from './dialog';
 import { JupyterFrontEnd } from '@jupyterlab/application';
+
+import { BlocklyTools } from './tools';
+
 
 const DIRTY_CLASS = 'jp-mod-dirty';
 
@@ -84,17 +90,53 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
     const button_clear = new BlocklyButton({
       label: '',
-      icon: circleEmptyIcon,
+      //icon: circleEmptyIcon,
+      icon: clearIcon,
       className: 'jp-blockly-clearButton',
       onClick: () => this._blayout.clearOutputArea(),
-      tooltip: 'Clear Output'
+      tooltip: 'Copy Output View'
+    });
+
+    const button_copyOutput = new BlocklyButton({
+      label: '',
+      icon: copyIcon,
+      className: 'jp-blockly-copyOutputButton',
+      onClick: () => {
+        const outputAreaAreas = this._blayout.cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
+        if (outputAreaAreas.length > 0) {
+          let element = outputAreaAreas[0];
+          for (let i=1; i<outputAreaAreas.length; i++) {
+            element.appendChild(outputAreaAreas[i]);
+          }
+          BlocklyTools.copyElement(element as HTMLElement);
+        }
+      },
+      tooltip: 'Copy Output View'
+    });
+
+    const button_copyCode = new BlocklyButton({
+      label: '',
+      icon: duplicateIcon,
+      className: 'jp-blockly-copyCodeButton',
+      onClick: () => {
+        BlocklyTools.copyElement(this._blayout.code.node);
+      },
+      tooltip: 'Copy Code View'
     });
 
     this.toolbar.addItem('save', button_save);
     this.toolbar.addItem('run', button_run);
     this.toolbar.addItem('stop', button_stop);
+    this.toolbar.addItem('spacer1', new Spacer());
+    this.toolbar.addItem('spacer2', new Spacer());
+    this.toolbar.addItem('spacer3', new Spacer());
+    this.toolbar.addItem('spacer4', new Spacer());
+    this.toolbar.addItem('spacer5', new Spacer());
     this.toolbar.addItem('clear', button_clear);
-    this.toolbar.addItem('spacer', new Spacer());
+    this.toolbar.addItem('copyOutput', button_copyOutput);
+    this.toolbar.addItem('copyCode', button_copyCode);
+    this.toolbar.addItem('spacer7', new Spacer());
+    this.toolbar.addItem('spacer8', new Spacer());
     this.toolbar.addItem(
       'toolbox',
       new SelectToolbox({
@@ -113,6 +155,29 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     );
     //
     this._manager.changed.connect(this._onBlockChanged, this);
+
+    //
+/*
+    function copyElement(e: HTMLElement): void {
+      const sel = window.getSelection();
+      if (sel == null) return;
+      // Save the current selection.
+      const savedRanges: Range[] = [];
+      for (let i = 0; i < sel.rangeCount; ++i) {
+        savedRanges[i] = sel.getRangeAt(i).cloneRange();
+      }
+      //
+      const range = document.createRange();
+      range.selectNodeContents(e);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy');
+      // Restore the saved selection.
+      sel.removeAllRanges();
+      savedRanges.forEach(r => sel.addRange(r));
+    }
+*/
+
   } /* End of constructor */
 
   // for dialog.ts

@@ -148,12 +148,15 @@ export class BlocklyLayout extends SplitLayout {
     this._cell.outputArea.title.label = '# Output View';
     this._cell.outputArea.title.icon = circleIcon;
     this._cell.outputArea.node.style.overflow = 'scroll';
-    this._cell.outputArea.node.style.marginTop = '40px';
+    //this._cell.outputArea.node.style.marginTop = '40px';
+    this._cell.outputArea.node.style.paddingTop = '40px';
+    this._cell.outputArea.node.style.paddingRight = '20px';
     this._cell.outputArea.node.style.paddingBottom = '100px';
     this._cell.outputArea.node.style.border = '0px';
 
     this._code = new SourceCodeWidget('jp-blockly-sourceCode', '# Code View');
-
+    this._code.addClass('jp-CodeView-output');
+//    this._code.setLanguage(this._manager.kernelspec.language);
 
 /*
     // InputArea of code
@@ -218,6 +221,12 @@ export class BlocklyLayout extends SplitLayout {
    */
   get cell(): CodeCell {
     return this._cell;
+  }
+
+  /*
+   */
+  get code(): SourceCodeWidget {
+    return this._code;
   }
 
   /*
@@ -318,6 +327,7 @@ export class BlocklyLayout extends SplitLayout {
       extra_init + this._manager.generator.workspaceToCode(this._workspace);
     //const code = "import ipywidgets as widgets\nwidgets.IntSlider()";
     this._cell.model.sharedModel.setSource(code);
+    this._code.setLanguage(this._manager.kernelspec?.language);
     this._code.setSource(code);
 
     // Execute the code using the kernel, by using a static method from the
@@ -362,7 +372,6 @@ export class BlocklyLayout extends SplitLayout {
     if (this._cell.outputArea!=null && !this._cell.outputArea.isVisible) { 
       this._dock.addWidget(this._cell.outputArea);
       this._dock.addWidget(this._code);
-      //this._dock.addWidget(this._cell);
       this.removeWidgetAt(1);
       this.insertWidget(1, this._dock);
     }
@@ -409,6 +418,7 @@ export class BlocklyLayout extends SplitLayout {
       // Serializing our workspace into the chosen language generator.
       const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
+      this._code.setLanguage(this._manager.kernelspec?.language);
       this._code.setSource(code);
       //
       if (event.type == Blockly.Events.FINISHED_LOADING) {
@@ -442,6 +452,8 @@ export class BlocklyLayout extends SplitLayout {
       const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
       this._cell.model.mimeType = this._manager.mimeType;
+      //
+      this._code.setLanguage(this._manager.kernelspec?.language);
       this._code.setSource(code);
     }
     else if (change === 'toolbox') {

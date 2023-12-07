@@ -1,20 +1,11 @@
+/**
+  SourceCodeWidhet Class
+*/
 
 import { Widget } from '@lumino/widgets';
 import { codeIcon } from '@jupyterlab/ui-components';
 
 import HLjs from 'highlight.js';
-
-import PythonLang from 'highlight.js/lib/languages/python';
-import PHPLang from 'highlight.js/lib/languages/php';
-import LuaLang from 'highlight.js/lib/languages/lua';
-import DartLang from 'highlight.js/lib/languages/dart';
-import JsLang from 'highlight.js/lib/languages/javascript';
-import TsLang from 'highlight.js/lib/languages/typescript';
-import CLang from 'highlight.js/lib/languages/c';
-import CppLang from 'highlight.js/lib/languages/cpp';
-import JuliaLang from 'highlight.js/lib/languages/julia';
-import RLang from 'highlight.js/lib/languages/r';
-import XmlLang from 'highlight.js/lib/languages/xml';
 
 //import 'highlight.js/styles/github.css';
 import 'highlight.js/styles/googlecode.css';
@@ -29,69 +20,64 @@ import 'highlight.js/styles/googlecode.css';
  */
 export class SourceCodeWidget extends Widget {
 
-  private _source: string;
-  private _language: string;
+    private _source: string;
+    private _language: string;
 
-  //
-  constructor(classname: string, title: string) {
-    super();
     //
-    this.addClass(classname);
-    this.title.label = title;
-    this.title.icon = codeIcon;
-    this.default_style();
+    constructor(classname: string, title: string) {
+        super();
+        //
+        this.addClass(classname);
+        this.title.label = title;
+        this.title.icon = codeIcon;
+        this.default_style();
 
-    this._source = '';
-    this._language = 'python'
-    this.setLanguage(this._language);
-  }
+        this._source = '';
+        this._language = ''
+        HLjs.highlightAll();
+    }
 
-  //
-  default_style(): void {
-    this.node.style.height = '100%';
-    this.node.style.overflowX = 'scroll';
-    this.node.style.overflowY = 'scroll';
-    this.node.style.paddingTop = '40px';
-    this.node.style.paddingLeft = '60px';
-    this.node.style.paddingBottom = '100px';
-    this.node.style.border = '0px';
-    this.node.style.whiteSpace = 'pre';
-    this.node.style.fontSize = 'var(--jp-code-font-size)';
-    this.node.style.fontFamily = 'var(--jp-code-font-family)';
-    this.node.style.fontWeight = 'bold';
-  }
-
-  //
-  setLanguage(lang: string) {
     //
-    HLjs.initHighlighting();
+    default_style(): void {
+        this.node.style.height = '100%';
+        this.node.style.overflowX = 'scroll';
+        this.node.style.overflowY = 'scroll';
+        //this.node.style.overflowWrap = 'normal';
+        //this.node.style.wordBreak = 'break-all';
+        this.node.style.paddingTop = '40px';
+        this.node.style.paddingRight = '40px';
+        this.node.style.paddingLeft = '60px';
+        this.node.style.paddingBottom = '100px';
+        this.node.style.border = '0px';
+        this.node.style.whiteSpace = 'pre';
+        this.node.style.fontSize = 'var(--jp-code-font-size)';
+        this.node.style.fontFamily = 'var(--jp-code-font-family)';
+        this.node.style.fontWeight = 'bold';
+        //console.log(this.node.style.cssText);
+    }
+
     //
-    if      (lang=='python') HLjs.registerLanguage(lang, PythonLang);
-    else if (lang=='php')    HLjs.registerLanguage(lang, PHPLang);
-    else if (lang=='lua')    HLjs.registerLanguage(lang, LuaLang);
-    else if (lang=='dart')   HLjs.registerLanguage(lang, DartLang);
-    else if (lang=='js')     HLjs.registerLanguage(lang, JsLang);
-    else if (lang=='ts')     HLjs.registerLanguage(lang, TsLang);
-    else if (lang=='c')      HLjs.registerLanguage(lang, CLang);
-    else if (lang=='cpp')    HLjs.registerLanguage(lang, CppLang);
-    else if (lang=='julia')  HLjs.registerLanguage(lang, JuliaLang);
-    else if (lang=='r')      HLjs.registerLanguage(lang, RLang);
-    else if (lang=='xml')    HLjs.registerLanguage(lang, XmlLang);
+    setLanguage(lang: string) {
+        if (lang===null || lang===undefined) lang = 'javascript';
+        this._language = lang;
+    }
+
     //
-    this._language = lang;
-  }
+    getLanguage(): string {
+        return this._language;
+    }
 
-  //
-  setSource(code: string) {
-    this._source = code;
+    //
+    setSource(code: string) {
+        this._source = code;
+        //
+        const html = HLjs.highlight(code, {language: this._language}).value;
+        this.node.innerHTML = html;
+    }
 
-    const html = HLjs.highlight(code, {language: this._language}).value;
-    this.node.innerHTML = html;
-  }
-
-  //
-  getSource(): string {
-    return this._source; 
-  }
+    //
+    getSource(): string {
+        return this._source; 
+    }
 }
 

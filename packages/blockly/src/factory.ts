@@ -14,6 +14,8 @@ import { CodeCell } from '@jupyterlab/cells';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
+import { BlocklyTools } from './tools';
+
 /**/
 namespace CommandIDs {
   export const copyToClipboard = 'blockly:copy-to-clipboard';
@@ -59,7 +61,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
           for (let i=1; i<outputAreaAreas.length; i++) {
             element.appendChild(outputAreaAreas[i]);
           }
-          copyElement(element as HTMLElement);
+          BlocklyTools.copyElement(element as HTMLElement);
         }
       }
     });
@@ -71,6 +73,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     });
 
     //
+/*
     function copyElement(e: HTMLElement): void {
       const sel = window.getSelection();
       if (sel == null) return;
@@ -89,6 +92,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
       sel.removeAllRanges();
       savedRanges.forEach(r => sel.addRange(r));
     }
+*/
   }
 
   get registry(): BlocklyRegistry {
