@@ -35,7 +35,7 @@ import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { closeDialog } from './dialog';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 
-import { BlocklyTools } from './tools';
+import { JLBTools } from './tools';
 
 
 const DIRTY_CLASS = 'jp-mod-dirty';
@@ -108,7 +108,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           for (let i=1; i<outputAreaAreas.length; i++) {
             element.appendChild(outputAreaAreas[i]);
           }
-          BlocklyTools.copyElement(element as HTMLElement);
+          JLBTools.copyElement(element as HTMLElement);
         }
       },
       tooltip: 'Copy Output View'
@@ -119,7 +119,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       icon: duplicateIcon,
       className: 'jp-blockly-copyCodeButton',
       onClick: () => {
-        BlocklyTools.copyElement(this._blayout.code.node);
+        JLBTools.copyElement(this._blayout.code.node);
       },
       tooltip: 'Copy Code View'
     });

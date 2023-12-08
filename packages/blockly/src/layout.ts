@@ -155,8 +155,6 @@ export class BlocklyLayout extends SplitLayout {
     this._cell.outputArea.node.style.border = '0px';
 
     this._code = new SourceCodeWidget('jp-blockly-sourceCode', '# Code View');
-    this._code.addClass('jp-CodeView-output');
-//    this._code.setLanguage(this._manager.kernelspec.language);
 
 /*
     // InputArea of code

@@ -14,11 +14,12 @@ import { CodeCell } from '@jupyterlab/cells';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
-import { BlocklyTools } from './tools';
+import { JLBTools } from './tools';
 
 /**/
 namespace CommandIDs {
-  export const copyToClipboard = 'blockly:copy-to-clipboard';
+  export const copyBlocklyToClipboard = 'blockly:copy-to-clipboard';
+//  export const copyNotebookToClipboard = 'notebook:copy-to-clipboard';
 }
 /**/
 
@@ -52,7 +53,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     this._trans = (options.translator || nullTranslator).load('jupyterlab');
 
     //
-    app.commands.addCommand(CommandIDs.copyToClipboard, {
+    app.commands.addCommand(CommandIDs.copyBlocklyToClipboard, {
       label: this._trans.__('Copy Blockly Output to Clipboard'),
       execute: args => { 
         const outputAreaAreas = this._cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
@@ -61,16 +62,33 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
           for (let i=1; i<outputAreaAreas.length; i++) {
             element.appendChild(outputAreaAreas[i]);
           }
-          BlocklyTools.copyElement(element as HTMLElement);
+          JLBTools.copyElement(element as HTMLElement);
         }
       }
     });
 
     app.contextMenu.addItem({
-      command: CommandIDs.copyToClipboard,
+      command: CommandIDs.copyBlocklyToClipboard,
       selector: '.jp-OutputArea-child',
       rank: 0
     });
+
+    //app.contextMenu.menu.removeItem({
+    //  command: 'notebook:copy-to-clipboard'
+    //});
+
+    //console.log(app.contextMenu.menu.commands.listCommands());
+    //app.contextMenu.menu.commands.removeCommand("notebook:copy-to-clipboard");
+    //console.log(app.contextMenu.menu.commands.hasCommand("notebook:copy-to-clipboard"));
+
+    //disp_obj(app.contextMenu.menu.commands.hasCommand);
+
+    //console.log(app.commands.listCommands());
+    //disp_obj(app.commands);
+
+    //disp_obj(app.contextMenu.menu);
+    //app.contextMenu.menu.clearItems();
+    //disp_obj(app.contextMenu.menu.commands);
 
     //
 /*
