@@ -339,13 +339,15 @@ export class BlocklyLayout extends SplitLayout {
         `
       );
     } else {
+      // focus outputArea
+      this._dock.activateWidget(this._cell.outputArea);
       //
       CodeCell.execute(this._cell, this._sessionContext)
         .then(() => this._resizeWorkspace())
-        .catch(e => console.error(e));
-      //
-      // focus outputArea
-      this._dock.activateWidget(this._cell.outputArea);
+        .catch(e => { 
+          console.error(e);
+          window.alert('Warning: Perhaps, canceled future for execute_request message before replies were done.');
+        });
     }
   }
 
@@ -369,6 +371,7 @@ export class BlocklyLayout extends SplitLayout {
     }
     if (this._cell.outputArea!=null && !this._cell.outputArea.isVisible) { 
       this._dock.addWidget(this._cell.outputArea);
+      //this._dock.addWidget(this._cell);
       this._dock.addWidget(this._code);
       this.removeWidgetAt(1);
       this.insertWidget(1, this._dock);

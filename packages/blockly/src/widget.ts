@@ -154,30 +154,8 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     );
     //
     this._manager.changed.connect(this._onBlockChanged, this);
-
-    //
-/*
-    function copyElement(e: HTMLElement): void {
-      const sel = window.getSelection();
-      if (sel == null) return;
-      // Save the current selection.
-      const savedRanges: Range[] = [];
-      for (let i = 0; i < sel.rangeCount; ++i) {
-        savedRanges[i] = sel.getRangeAt(i).cloneRange();
-      }
-      //
-      const range = document.createRange();
-      range.selectNodeContents(e);
-      sel.removeAllRanges();
-      sel.addRange(range);
-      document.execCommand('copy');
-      // Restore the saved selection.
-      sel.removeAllRanges();
-      savedRanges.forEach(r => sel.addRange(r));
-    }
-*/
-
   } /* End of constructor */
+
 
   // for dialog.ts
   get trans(): TranslationBundle {
@@ -185,9 +163,15 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   }
 
   //
-  get blockly_layout(): BlocklyLayout {
+  get blayout(): BlocklyLayout {
     return this._blayout;
   }
+
+  //
+  get cell(): CodeCell {
+    return this._blayout?.cell;
+  }
+
 
  /**
   * Sets the dirty boolean while also toggling the DIRTY_CLASS
@@ -242,6 +226,7 @@ export namespace BlocklyEditor {
     manager: BlocklyManager;
   }
 }
+
 
 /**
  * Widget that contains the main view of the DocumentWidget.

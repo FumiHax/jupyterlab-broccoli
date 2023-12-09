@@ -5,23 +5,14 @@ import {
 } from '@jupyterlab/docregistry';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
+import { JupyterFrontEnd } from '@jupyterlab/application';
+import { CodeCell } from '@jupyterlab/cells';
+import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
 import { BlocklyEditor, BlocklyPanel } from './widget';
 import { BlocklyRegistry } from './registry';
 import { BlocklyManager } from './manager';
-import { CodeCell } from '@jupyterlab/cells';
 
-import { JupyterFrontEnd } from '@jupyterlab/application';
-import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
-
-import { JLBTools } from './tools';
-
-/**/
-namespace CommandIDs {
-  export const copyBlocklyToClipboard = 'blockly:copy-to-clipboard';
-//  export const copyNotebookToClipboard = 'notebook:copy-to-clipboard';
-}
-/**/
 
 /**
  * A widget factory to create new instances of BlocklyEditor.
@@ -49,68 +40,13 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     this._registry = new BlocklyRegistry();
     this._rendermime = options.rendermime;
     this._mimetypeService = options.mimetypeService;
-
     this._trans = (options.translator || nullTranslator).load('jupyterlab');
+    this._cell = null;
+  }
 
-    //
-    app.commands.addCommand(CommandIDs.copyBlocklyToClipboard, {
-      label: this._trans.__('Copy Blockly Output to Clipboard'),
-      execute: args => { 
-        const outputAreaAreas = this._cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
-        if (outputAreaAreas.length > 0) {
-          let element = outputAreaAreas[0];
-          for (let i=1; i<outputAreaAreas.length; i++) {
-            element.appendChild(outputAreaAreas[i]);
-          }
-          JLBTools.copyElement(element as HTMLElement);
-        }
-      }
-    });
-
-    app.contextMenu.addItem({
-      command: CommandIDs.copyBlocklyToClipboard,
-      selector: '.jp-OutputArea-child',
-      rank: 0
-    });
-
-    //app.contextMenu.menu.removeItem({
-    //  command: 'notebook:copy-to-clipboard'
-    //});
-
-    //console.log(app.contextMenu.menu.commands.listCommands());
-    //app.contextMenu.menu.commands.removeCommand("notebook:copy-to-clipboard");
-    //console.log(app.contextMenu.menu.commands.hasCommand("notebook:copy-to-clipboard"));
-
-    //disp_obj(app.contextMenu.menu.commands.hasCommand);
-
-    //console.log(app.commands.listCommands());
-    //disp_obj(app.commands);
-
-    //disp_obj(app.contextMenu.menu);
-    //app.contextMenu.menu.clearItems();
-    //disp_obj(app.contextMenu.menu.commands);
-
-    //
-/*
-    function copyElement(e: HTMLElement): void {
-      const sel = window.getSelection();
-      if (sel == null) return;
-      // Save the current selection.
-      const savedRanges: Range[] = [];
-      for (let i = 0; i < sel.rangeCount; ++i) {
-        savedRanges[i] = sel.getRangeAt(i).cloneRange();
-      }
-      //
-      const range = document.createRange();
-      range.selectNodeContents(e);
-      sel.removeAllRanges();
-      sel.addRange(range);
-      document.execCommand('copy');
-      // Restore the saved selection.
-      sel.removeAllRanges();
-      savedRanges.forEach(r => sel.addRange(r));
-    }
-*/
+  //
+  get trans(): TranslationBundle {
+    return this._trans;
   }
 
   get registry(): BlocklyRegistry {
@@ -119,6 +55,10 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
 
   get manager(): BlocklyManager {
     return this._manager;
+  }
+
+  get cell(): CodeCell {
+    return this._cell;
   }
 
   /**
@@ -141,7 +81,6 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
     );
     this._manager = manager;
     const content = new BlocklyPanel(context, manager, this._rendermime);
-    //
     this._cell = content.activeLayout.cell;
 
     return new BlocklyEditor(this._app, { context, content, manager });
@@ -160,3 +99,4 @@ export namespace BlocklyEditorFactory {
     mimetypeService: IEditorMimeTypeService;
   }
 }
+

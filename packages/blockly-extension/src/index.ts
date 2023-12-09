@@ -11,8 +11,8 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-import { MainMenu, IMainMenu } from '@jupyterlab/mainmenu';
-//import { IMainMenu } from '@jupyterlab/mainmenu';
+//import { MainMenu } from '@jupyterlab/mainmenu';
+import { IMainMenu } from '@jupyterlab/mainmenu';
 import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
@@ -32,8 +32,7 @@ import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
 import { BlocklyEditor } from 'jupyterlab-broccoli';
 import { IBlocklyRegistry } from 'jupyterlab-broccoli';
 import { blockly_icon } from './icons';
-
-//import { JLBTools } from 'jupyterlab-broccoli';
+import { JLBTools } from 'jupyterlab-broccoli';
 
 /*
 import {
@@ -51,6 +50,7 @@ const PALETTE_CATEGORY = 'Blockly editor';
 
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
+  //
   export const interruptKernel = 'blockly:interrupt-to-kernel';
   export const restartKernel = 'blockly:restart-Kernel';
   export const restartKernelAndClear = 'blockly:restart-and-clear';
@@ -58,6 +58,9 @@ namespace CommandIDs {
   //export const restartClear = 'blockly:restart-clear-output';
   //export const restartRunAll = 'blockly:restart-run-all';
   export const reconnectToKernel = 'blockly:reconnect-kernel';
+  //
+  export const copyBlocklyToClipboard = 'blockly:copy-to-clipboard';
+  //export const copyNotebookToClipboard = 'notebook:copy-to-clipboard';
 }
 
 /**
@@ -240,6 +243,35 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     }
 
     //
+    // Context Menu
+    commands.addCommand(CommandIDs.copyBlocklyToClipboard, {
+      label: trans.__('Copy Blockly Output View to Clipboard'),
+      execute: args => {
+        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        if (current) {
+          const outputAreaAreas = current.cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
+          if (outputAreaAreas &&  outputAreaAreas.length > 0) {
+            let element = outputAreaAreas[0];
+            for (let i=1; i<outputAreaAreas.length; i++) {
+              element.appendChild(outputAreaAreas[i]);
+            }
+            JLBTools.copyElement(element as HTMLElement);
+          }
+        }
+      },
+      isEnabled
+    });
+
+    // app.contextMenu : ContextMenuSvg
+    // app.contextMenu.menu : MenuSvg
+    app.contextMenu.addItem({
+      command: CommandIDs.copyBlocklyToClipboard,
+      selector: '.jp-OutputArea-child',
+      rank: 0
+    });
+
+
+    //
     // Main Menu
     commands.addCommand(CommandIDs.interruptKernel, {
       label: trans.__('Interrupt Kernel'),
@@ -266,7 +298,6 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         }
       },
       isEnabled
-      //icon: args => (args.toolbar ? refreshIcon : undefined)
     });
 
     commands.addCommand(CommandIDs.restartKernelAndClear, {
@@ -275,7 +306,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       execute: args => { 
         const current = TrackerTools.getCurrentWidget(tracker, shell, args);
         if (current) {
-          current.blockly_layout?.clearOutputArea();
+          current.blayout?.clearOutputArea();
         }
       },
       isEnabled
@@ -316,15 +347,6 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       });
     }
 
-TrackerTools.disp_obj((mainMenu as MainMenu).kernelMenu.kernelUsers);
-//(mainMenu as MainMenu).kernelMenu.clearItems();
-//const itm = (mainMenu as MainMenu).kernelMenu.find((i,idx)=>(i.command==="notebook:restart-kernel"));
-//var i = 0;
-//for (i=0; i<2; i++) 
-//TrackerTools.disp_obj(mainMenu.kernelMenu.removeItem("notebook:restart-kernel"));
-//TrackerTools.disp_obj((mainMenu as MainMenu).kernelMenu);
-      //(mainMenu as MainMenu).kernelMenu.removeItemAt(2);  // remove notebook:restart-kernel menu, bug?
-
 /*
     if (widgetRegistry) {
       tracker.forEach(panel => {
@@ -350,6 +372,7 @@ TrackerTools.disp_obj((mainMenu as MainMenu).kernelMenu.kernelUsers);
     return widgetFactory.registry;
   }
 };
+
 
 /*
 function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
@@ -392,27 +415,6 @@ namespace TrackerTools {
 
     return tracker.currentWidget;
   }
-
-
-    export function disp_obj(obj: object) {
-        const getMethods = (obj: object): string[] => {
-            const getOwnMethods = (obj: object) =>
-                Object.entries(Object.getOwnPropertyDescriptors(obj))
-                    .filter(([name, {value}]) => typeof value === 'function' && name !== 'constructor')
-                    .map(([name]) => name)
-            const _getMethods = (o: object, methods: string[]): string[] =>
-                o === Object.prototype ? methods : _getMethods(Object.getPrototypeOf(o), methods.concat(getOwnMethods(o)))
-            return _getMethods(obj, [])
-        }
-
-        console.log("+++++++++++++++++++++++++++++++++++");
-        for (const key in obj) {
-            console.log(String(key) + " -> " + obj[key]);
-        }
-        console.log("===================================");
-        console.log(getMethods(obj));
-        console.log("+++++++++++++++++++++++++++++++++++");
-    }
 }
 
 

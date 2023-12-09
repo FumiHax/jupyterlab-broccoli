@@ -70,7 +70,6 @@ export class SourceCodeWidget extends Widget {
     //
     setSource(code: string) {
         this._source = code;
-        //
         this.node.innerHTML = HLjs.highlight(code, {language: this._language}).value;
     }
 
