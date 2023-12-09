@@ -7,8 +7,8 @@ import { codeIcon } from '@jupyterlab/ui-components';
 
 import HLjs from 'highlight.js';
 
-//import 'highlight.js/styles/github.css';
-import 'highlight.js/styles/googlecode.css';
+import 'highlight.js/styles/github.css';
+//import 'highlight.js/styles/googlecode.css';
 
 //declare function require(string): any;
 

@@ -12,6 +12,7 @@ import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { MainMenu, IMainMenu } from '@jupyterlab/mainmenu';
+//import { IMainMenu } from '@jupyterlab/mainmenu';
 import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
@@ -51,8 +52,12 @@ const PALETTE_CATEGORY = 'Blockly editor';
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
   export const interruptKernel = 'blockly:interrupt-to-kernel';
+  export const restartKernel = 'blockly:restart-Kernel';
+  export const restartKernelAndClear = 'blockly:restart-and-clear';
+  //export const clearAllOutputs = 'blockly:clear-all-cell-outputs';
+  //export const restartClear = 'blockly:restart-clear-output';
+  //export const restartRunAll = 'blockly:restart-run-all';
   export const reconnectToKernel = 'blockly:reconnect-kernel';
-  export const restartKernel = 'blockly:restart-kernel';
 }
 
 /**
@@ -234,6 +239,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       });
     }
 
+    //
     // Main Menu
     commands.addCommand(CommandIDs.interruptKernel, {
       label: trans.__('Interrupt Kernel'),
@@ -244,20 +250,9 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         const kernel = current.context.sessionContext.session?.kernel;
         if (kernel) return kernel.interrupt();
       },
-      isEnabled: args => (args.toolbar ? true : isEnabled()),
-      //icon: args => (args.toolbar ? stopIcon : undefined)
-    });
-
-    commands.addCommand(CommandIDs.reconnectToKernel, {
-      label: trans.__('Reconnect to Kernel'),
-      caption: trans.__('Reconnect to the kernel'),
-      execute: args => { 
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
-        if (!current) return;
-        const kernel = current.context.sessionContext.session?.kernel;
-        if (kernel) return kernel.reconnect();
-      },
       isEnabled
+      //isEnabled: args => (args.toolbar ? true : isEnabled()),
+      //icon: args => (args.toolbar ? stopIcon : undefined)
     });
 
     commands.addCommand(CommandIDs.restartKernel, {
@@ -270,8 +265,32 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
           return sessionDialogs.restart(current.context.sessionContext);
         }
       },
-      isEnabled: args => (args.toolbar ? true : isEnabled()),
+      isEnabled
       //icon: args => (args.toolbar ? refreshIcon : undefined)
+    });
+
+    commands.addCommand(CommandIDs.restartKernelAndClear, {
+      label: trans.__('Clear…'),
+      caption: trans.__('Restart the kernel and clear output view'),
+      execute: args => { 
+        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        if (current) {
+          current.blockly_layout?.clearOutputArea();
+        }
+      },
+      isEnabled
+    });
+
+    commands.addCommand(CommandIDs.reconnectToKernel, {
+      label: trans.__('Reconnect to Kernel'),
+      caption: trans.__('Reconnect to the kernel'),
+      execute: args => { 
+        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        if (!current) return;
+        const kernel = current.context.sessionContext.session?.kernel;
+        if (kernel) return kernel.reconnect();
+      },
+      isEnabled: args => (args.toolbar ? true : isEnabled())
     });
 
     // Add the command to the main menu
@@ -281,23 +300,30 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         isEnabled
       });
 
+      mainMenu.kernelMenu.kernelUsers.restartKernel.add({
+        id: CommandIDs.restartKernel,
+        isEnabled
+      });
+
+      mainMenu.kernelMenu.kernelUsers.clearWidget.add({
+        id: CommandIDs.restartKernelAndClear,
+        isEnabled
+      });
+
       mainMenu.kernelMenu.kernelUsers.reconnectToKernel.add({
         id: CommandIDs.reconnectToKernel,
         isEnabled
       });
+    }
 
+TrackerTools.disp_obj((mainMenu as MainMenu).kernelMenu.kernelUsers);
 //(mainMenu as MainMenu).kernelMenu.clearItems();
 //const itm = (mainMenu as MainMenu).kernelMenu.find((i,idx)=>(i.command==="notebook:restart-kernel"));
 //var i = 0;
 //for (i=0; i<2; i++) 
 //TrackerTools.disp_obj(mainMenu.kernelMenu.removeItem("notebook:restart-kernel"));
-//TrackerTools.disp_obj(mainMenu.kernelMenu.kernelUsers);
-      (mainMenu as MainMenu).kernelMenu.removeItemAt(2);  // remove notebook:restart-kernel menu, bug?
-      mainMenu.kernelMenu.kernelUsers.restartKernel.add({
-        id: CommandIDs.restartKernel,
-        isEnabled
-      });
-    }
+//TrackerTools.disp_obj((mainMenu as MainMenu).kernelMenu);
+      //(mainMenu as MainMenu).kernelMenu.removeItemAt(2);  // remove notebook:restart-kernel menu, bug?
 
 /*
     if (widgetRegistry) {

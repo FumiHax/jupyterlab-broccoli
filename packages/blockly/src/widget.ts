@@ -130,7 +130,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     this.toolbar.addItem('spacer1', new Spacer());
     this.toolbar.addItem('spacer2', new Spacer());
     this.toolbar.addItem('spacer3', new Spacer());
-    this.toolbar.addItem('spacer4', new Spacer());
     this.toolbar.addItem('spacer5', new Spacer());
     this.toolbar.addItem('clear', button_clear);
     this.toolbar.addItem('copyOutput', button_copyOutput);
@@ -183,6 +182,11 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   // for dialog.ts
   get trans(): TranslationBundle {
     return this._trans;
+  }
+
+  //
+  get blockly_layout(): BlocklyLayout {
+    return this._blayout;
   }
 
  /**
