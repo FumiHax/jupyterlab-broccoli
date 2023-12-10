@@ -18,6 +18,10 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
 ```
 pip install jupyterlab-broccoli
 ```
+* for JupyterLab ^3.6.0
+```
+pip install jupyterlab-broccoli==0.3.6
+```
 ## Requirements
 * 0.4.x : JupyterLab ^4.0.0
 * 0.3.x : JupyterLab ^3.6.0
