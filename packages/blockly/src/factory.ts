@@ -6,6 +6,7 @@ import {
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IEditorMimeTypeService } from '@jupyterlab/codeeditor';
 import { JupyterFrontEnd } from '@jupyterlab/application';
+import { WidgetTracker } from '@jupyterlab/apputils';
 import { CodeCell } from '@jupyterlab/cells';
 import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 
@@ -26,6 +27,7 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
   private _mimetypeService: IEditorMimeTypeService;
   private _manager: BlocklyManager;
   private _app: JupyterFrontEnd;
+  private _tracker: WidgetTracker<BlocklyEditor>;
   private _cell: CodeCell;
   private _trans: TranslationBundle;
 
@@ -34,9 +36,10 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
    *
    * @param options Constructor options
    */
-  constructor(app: JupyterFrontEnd, options: BlocklyEditorFactory.IOptions) {
+  constructor(app: JupyterFrontEnd, tracker: WidgetTracker<BlocklyEditor>, options: BlocklyEditorFactory.IOptions) {
     super(options);
     this._app = app;
+    this._tracker = tracker;
     this._registry = new BlocklyRegistry();
     this._rendermime = options.rendermime;
     this._mimetypeService = options.mimetypeService;
@@ -80,10 +83,12 @@ export class BlocklyEditorFactory extends ABCWidgetFactory<
       this._mimetypeService
     );
     this._manager = manager;
-    const content = new BlocklyPanel(context, manager, this._rendermime);
+    const content = new BlocklyPanel(this._tracker, context, manager, this._rendermime);
     this._cell = content.activeLayout.cell;
 
-    return new BlocklyEditor(this._app, { context, content, manager });
+    const editor = new BlocklyEditor(this._app, { context, content, manager });
+    content.activeEditor = editor;
+    return editor;
   }
 }
 

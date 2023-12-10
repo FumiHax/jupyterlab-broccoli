@@ -14,9 +14,6 @@ import 'highlight.js/styles/github.css';
 
 
 /**
-  http://alphasis.info/javascript/dom/styleobject/
-  https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
-  https://www.npmjs.com/package/highlight.js?activeTab=readme#basic-usage
  */
 export class SourceCodeWidget extends Widget {
 

@@ -16,30 +16,13 @@ import { IMainMenu } from '@jupyterlab/mainmenu';
 import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
-/*
-import { CodeCell } from '@jupyterlab/cells';
-import {
-  WidgetRenderer,
-  registerWidgetManager
-} from '@jupyter-widgets/jupyterlab-manager';
-*/
-
-import {
-  ReadonlyPartialJSONObject,
-} from '@lumino/coreutils';
-
 import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
 import { BlocklyEditor } from 'jupyterlab-broccoli';
 import { IBlocklyRegistry } from 'jupyterlab-broccoli';
-import { blockly_icon } from './icons';
-import { JLBTools } from 'jupyterlab-broccoli';
+import { JlbTools } from 'jupyterlab-broccoli';
 
-/*
-import {
-  stopIcon,
-  refreshIcon
-} from '@jupyterlab/ui-components';
-*/
+import { blockly_icon } from './icons';
+
 
 /**
  * The name of the factory that creates the editor widgets.
@@ -119,12 +102,12 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     const { commands, shell } = app;
 
     const isEnabled = (): boolean => {
-      return TrackerTools.isEnabled(shell, tracker);
+      return JlbTools.isEnabled(shell, tracker);
     };
 
     // Creating the widget factory to register it so the document manager knows about
     // our new DocumentWidget
-    const widgetFactory = new BlocklyEditorFactory(app, {
+    const widgetFactory = new BlocklyEditorFactory(app, tracker, {
       name: FACTORY,
       modelName: 'text',
       fileTypes: ['blockly'],
@@ -247,7 +230,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     commands.addCommand(CommandIDs.copyBlocklyToClipboard, {
       label: trans.__('Copy Blockly Output View to Clipboard'),
       execute: args => {
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
         if (current) {
           const outputAreaAreas = current.cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
           if (outputAreaAreas &&  outputAreaAreas.length > 0) {
@@ -255,7 +238,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
             for (let i=1; i<outputAreaAreas.length; i++) {
               element.appendChild(outputAreaAreas[i]);
             }
-            JLBTools.copyElement(element as HTMLElement);
+            JlbTools.copyElement(element as HTMLElement);
           }
         }
       },
@@ -267,7 +250,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     app.contextMenu.addItem({
       command: CommandIDs.copyBlocklyToClipboard,
       selector: '.jp-OutputArea-child',
-      rank: 0
+      rank: 0,
     });
 
 
@@ -277,7 +260,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       label: trans.__('Interrupt Kernel'),
       caption: trans.__('Interrupt the kernel'),
       execute: args => { 
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
         if (!current) return;
         const kernel = current.context.sessionContext.session?.kernel;
         if (kernel) return kernel.interrupt();
@@ -291,7 +274,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       label: trans.__('Restart Kernel…'),
       caption: trans.__('Restart the kernel'),
       execute: args => { 
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
         if (current) {
           const sessionDialogs = new  SessionContextDialogs({translator});
           return sessionDialogs.restart(current.context.sessionContext);
@@ -304,7 +287,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       label: trans.__('Clear…'),
       caption: trans.__('Restart the kernel and clear output view'),
       execute: args => { 
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
         if (current) {
           current.blayout?.clearOutputArea();
         }
@@ -316,7 +299,7 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       label: trans.__('Reconnect to Kernel'),
       caption: trans.__('Reconnect to the kernel'),
       execute: args => { 
-        const current = TrackerTools.getCurrentWidget(tracker, shell, args);
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
         if (!current) return;
         const kernel = current.context.sessionContext.session?.kernel;
         if (kernel) return kernel.reconnect();
@@ -383,39 +366,6 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
   }
 }
 */
-
-
-/**
-  Tools for Tracker
-*/
-namespace TrackerTools {
-  //
-  export function isEnabled(
-    shell: JupyterFrontEnd.IShell,
-    tracker: WidgetTracker<BlocklyEditor>
-  ): boolean {
-    return (
-      tracker.currentWidget !== null &&
-      tracker.currentWidget === shell.currentWidget
-    );
-  }
-
-  //
-  export function getCurrentWidget(
-    tracker: WidgetTracker<BlocklyEditor>,
-    shell: JupyterFrontEnd.IShell,
-    args: ReadonlyPartialJSONObject
-  ): BlocklyEditor | null {
-    const widget = tracker.currentWidget;
-    const activate = args['activate'] !== false;
-
-    if (activate && widget) {
-      shell.activateById(widget.id);
-    }
-
-    return tracker.currentWidget;
-  }
-}
 
 
 //

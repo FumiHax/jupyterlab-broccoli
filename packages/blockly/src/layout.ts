@@ -1,42 +1,31 @@
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
-//import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
-import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
-//import { CodeCell, RawCellModel } from '@jupyterlab/cells';
+import { Cell, CodeCell, CodeCellModel } from '@jupyterlab/cells';
+//import { RawCellModel } from '@jupyterlab/cells';
+//import { CodeCellModel } from '@jupyterlab/cells';
 
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
-//import { BoxLayout, Widget } from '@lumino/widgets';
+//import { BoxLayout } from '@lumino/widgets';
 import { DockPanel } from '@lumino/widgets';
-//import { IIterator, ArrayIterator } from '@lumino/algorithm';
 import { Signal } from '@lumino/signaling';
+//import { IIterator, ArrayIterator } from '@lumino/algorithm';
+
+//import { InputArea } from '@jupyterlab/cells';
+//import { SimplifiedOutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
+//import { CodeMirrorEditor } from './editor';
+//import { CodeEditor } from '@jupyterlab/codeeditor'
+import { CodeMirrorEditorFactory } from '@jupyterlab/codemirror'
+import {
+  codeIcon,
+  circleIcon,
+} from '@jupyterlab/ui-components';
 
 import * as Blockly from 'blockly';
 
 import { BlocklyManager } from './manager';
 import { THEME } from './utils';
 import { SourceCodeWidget } from './codewidget';
-
-import {
-  codeIcon,
-  circleIcon,
-} from '@jupyterlab/ui-components';
-
-import { Cell } from '@jupyterlab/cells';
-//import { InputArea } from '@jupyterlab/cells';
-//import { SimplifiedOutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
-//import { CodeMirrorEditor } from './editor';
-//import { CodeEditor } from '@jupyterlab/codeeditor'
-import {
-//  CodeMirrorEditor,
-  CodeMirrorEditorFactory,
-//  CodeMirrorMimeTypeService,
-//  EditorLanguageRegistry
-} from '@jupyterlab/codemirror'
-
-import {
-//  ISharedRawCell,
-} from '@jupyter/ydoc';
 
 
 /**
@@ -50,10 +39,6 @@ export class BlocklyLayout extends SplitLayout {
   private _workspace: Blockly.WorkspaceSvg;
   private _sessionContext: ISessionContext;
   private _cell: CodeCell;
-//  private _inpt: InputArea;
-//  private _output: SimplifiedOutputArea;
-//  private _output_style: string;
-//  private _code_style: string;
   private _finishedLoading = false;
   private _dock;
 
@@ -69,60 +54,11 @@ export class BlocklyLayout extends SplitLayout {
     super({ renderer: SplitPanel.defaultRenderer, orientation: 'horizontal' });
     this._manager = manager;
     this._sessionContext = sessionContext;
-/*
-    --jp-code-font-size: 13px;
-    --jp-code-line-height: 1.3077;
-    --jp-code-padding: 5px;
-    --jp-code-font-family-default: menlo, consolas, 'DejaVu Sans Mono', monospace;
-    --jp-code-font-family: var(--jp-code-font-family-default);
-    --jp-code-presentation-font-size: 16px;
-    --jp-code-cursor-width0: 1.4px;
-    --jp-code-cursor-width1: 2px;
-    --jp-code-cursor-width2: 4px;
-*/
 
     // Creating the container for the Blockly editor
     // and the output area to render the execution replies.
     this._host = new Widget();
     this._dock = new DockPanel();
-
-/*
-    const inlineCodeMirrorConfig = {
-      ...this.defaultConfig,
-      extraKeys: {
-        'Cmd-Right': 'goLineRight',
-        End: 'goLineRight',
-        'Cmd-Left': 'goLineLeft',
-        Tab: 'indentMoreOrinsertTab',
-        'Shift-Tab': 'indentLess',
-        'Cmd-/': cm => cm.toggleComment({ indent: true }),
-        'Ctrl-/': cm => cm.toggleComment({ indent: true }),
-        'Ctrl-G': 'find',
-        'Cmd-G': 'find'
-      },
-      defaults: Partial<CodeMirrorEditor.IConfig> = {},
-     // defaults
-    };
-*/
-
-/*
-    const documentCodeMirrorConfig = {
-//      ...CodeMirrorEditor.defaultConfig,
-      extraKeys: {
-        Tab: 'indentMoreOrinsertTab',
-        'Shift-Tab': 'indentLess',
-        'Cmd-/': cm => cm.toggleComment({ indent: true }),
-        'Ctrl-/': cm => cm.toggleComment({ indent: true }),
-        'Shift-Enter': () => {
-        }
-      },
-      lineNumbers: true,
-      scrollPastEnd: true,
-//      ...defaults
-    };
-*/
-
-
 
     const factoryService = new CodeMirrorEditorFactory({});
     // Creating a CodeCell widget to render the code and
@@ -163,56 +99,18 @@ export class BlocklyLayout extends SplitLayout {
       contentFactory: new Cell.ContentFactory({
         //editorFactory: factoryService.newDocumentEditor
         editorFactory: factoryService.newDocumentEditor.bind(factoryService)
-        //editorFactory: factoryService.newInlineEditor
         //editorFactory: factoryService.newInlineEditor.bind(factoryService)
       })
     });
-    this._inpt.model.trusted = true;
-    this._inpt.model.mimeType = this._manager.mimeType;
-    this._inpt.node.style.cssText = 'input: read-only; textarea:read-only; border: 0px;';
-    this._inpt.title.icon = codeIcon;
-    this._inpt.title.label = '_Code View';
-*/
 
-    //
-/*
     this._output = new SimplifiedOutputArea({
       model: new OutputAreaModel({ trusted: true }),
       rendermime
     });
 */
 
-    //
     this._manager.changed.connect(this._onManagerChanged, this);
   }
-
-/*
-  const defaultConfig: Required<IConfig> = {
-    ...CodeEditor.defaultConfig,
-    mode: 'null',
-    theme: 'jupyter',
-    smartIndent: true,
-    electricChars: true,
-    keyMap: 'default',
-    extraKeys: null,
-    gutters: [],
-    fixedGutter: true,
-    showCursorWhenSelecting: false,
-    coverGutterNextToScrollbar: false,
-    dragDrop: true,
-    lineSeparator: null,
-    scrollbarStyle: 'native',
-    lineWiseCopyCut: true,
-    scrollPastEnd: false,
-    styleActiveLine: false,
-    styleSelectedText: true,
-    selectionPointer: false,
-    rulers: [],
-    foldGutter: false,
-    handlePaste: true
-  };
-*/
-
 
   /*
    * The code cell.

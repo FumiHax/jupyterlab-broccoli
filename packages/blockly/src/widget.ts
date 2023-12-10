@@ -15,11 +15,19 @@ import {
   duplicateIcon
 } from '@jupyterlab/ui-components';
 
+import { JupyterFrontEnd } from '@jupyterlab/application';
+
+import { SessionContextDialogs } from '@jupyterlab/apputils';
+import { WidgetTracker } from '@jupyterlab/apputils';
+
+import { CodeCell } from '@jupyterlab/cells';
+import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 import { SplitPanel } from '@lumino/widgets';
 import { Signal } from '@lumino/signaling';
 
 import type Blockly from 'blockly';
 
+import { closeDialog } from './dialog';
 import { BlocklyLayout } from './layout';
 import { BlocklyManager } from './manager';
 import {
@@ -28,17 +36,11 @@ import {
   SelectToolbox,
   Spacer
 } from './toolbar';
-import { CodeCell } from '@jupyterlab/cells';
 
-import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
-import { SessionContextDialogs } from '@jupyterlab/apputils';
-import { closeDialog } from './dialog';
-import { JupyterFrontEnd } from '@jupyterlab/application';
-
-import { JLBTools } from './tools';
-
+import { JlbTools } from './tools';
 
 const DIRTY_CLASS = 'jp-mod-dirty';
+
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
@@ -108,7 +110,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
           for (let i=1; i<outputAreaAreas.length; i++) {
             element.appendChild(outputAreaAreas[i]);
           }
-          JLBTools.copyElement(element as HTMLElement);
+          JlbTools.copyElement(element as HTMLElement);
         }
       },
       tooltip: 'Copy Output View'
@@ -119,7 +121,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       icon: duplicateIcon,
       className: 'jp-blockly-copyCodeButton',
       onClick: () => {
-        JLBTools.copyElement(this._blayout.code.node);
+        JlbTools.copyElement(this._blayout.code.node);
       },
       tooltip: 'Copy Code View'
     });
@@ -171,7 +173,6 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
   get cell(): CodeCell {
     return this._blayout?.cell;
   }
-
 
  /**
   * Sets the dirty boolean while also toggling the DIRTY_CLASS
@@ -232,10 +233,12 @@ export namespace BlocklyEditor {
  * Widget that contains the main view of the DocumentWidget.
  */
 export class BlocklyPanel extends SplitPanel {
-  private _context: DocumentRegistry.IContext<DocumentModel>;
+  private _tracker: WidgetTracker<BlocklyEditor>;
   private _content;
+  private _context: DocumentRegistry.IContext<DocumentModel>;
   private _rendermime: IRenderMimeRegistry;
   private _manager: BlocklyManager;
+  private _editor: BlocklyEditor;
 
   /**
    * Construct a `BlocklyPanel`.
@@ -243,6 +246,7 @@ export class BlocklyPanel extends SplitPanel {
    * @param context - The documents context.
    */
   constructor(
+    tracker: WidgetTracker<BlocklyEditor>,
     context: DocumentRegistry.IContext<DocumentModel>,
     manager: BlocklyManager,
     rendermime: IRenderMimeRegistry
@@ -254,6 +258,8 @@ export class BlocklyPanel extends SplitPanel {
     this._context = context;
     this._rendermime = rendermime;
     this._manager = manager;
+    this._tracker = tracker;
+    this._editor = null;
 
     // Load the content of the file when the context is ready
     this._context.ready.then(() => this._load());
@@ -291,6 +297,14 @@ export class BlocklyPanel extends SplitPanel {
     return this.layout as BlocklyLayout;
   }
 
+  set activeEditor(editor: BlocklyEditor) {
+    this._editor = editor;
+  }
+
+  get activeEditor(): BlocklyEditor {
+    return this._editor;
+  }
+
   /**
    * Dispose of the resources held by the widget.
    */
@@ -315,9 +329,10 @@ export class BlocklyPanel extends SplitPanel {
     }
 
     if (kernelname === '') {
-      const sessionContextDialogs = new SessionContextDialogs({translator: (this._context as any).translator});
-      sessionContextDialogs.selectKernel(this._context.sessionContext);
-      //sessionContextDialogs.selectKernel(this._context.sessionContext, (this._context as any).translator);
+      if (this._editor.id === this._tracker.currentWidget.id) {
+        const sessionContextDialogs = new SessionContextDialogs({translator: (this._context as any).translator});
+        sessionContextDialogs.selectKernel(this._context.sessionContext);
+      }
     }
     else {
       this._manager.selectKernel(kernelname);
