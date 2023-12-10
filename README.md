@@ -15,15 +15,17 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
 * Corresponding version is jupyterlab-blockly 0.3.0a
   * https://github.com/QuantStack/jupyterlab-blockly
 ## Install
+#### for JupyterLab ^4.0.x
 ```
 pip install jupyterlab-broccoli
 ```
-* for JupyterLab ^3.6.0
+#### for JupyterLab ^3.6.x
 ```
 pip install jupyterlab-broccoli==0.3.6
 ```
 ## Requirements
 * 0.4.x : JupyterLab ^4.0.0
+ * 0.4.0 : Blocky is v10.2.2 ()
 * 0.3.x : JupyterLab ^3.6.0
 
 ## Screen Shot
