@@ -102,7 +102,6 @@ export class BlocklyRegistry implements IBlocklyRegistry {
    * @argument funcs Imported functions.
    */
   registerCodes(language: string, funcs: {[name: string]: Function}): void {
-console.log(language);
     let generator = this._generators.get(language);
     Object.assign(
       generator,
