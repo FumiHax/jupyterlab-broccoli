@@ -23,6 +23,7 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   private _toolboxes: Map<string, ToolboxDefinition>;
   private _generators: Map<string, Blockly.Generator>;
   private _language = "En";
+  private _lock = false;
 
   /**
    * Constructor of BlocklyRegistry.
@@ -59,6 +60,16 @@ export class BlocklyRegistry implements IBlocklyRegistry {
   get language(): string {
     return this._language;
   }
+
+
+  get lock(): boolean {
+    return this._lock;
+  }
+
+  set lock(use: boolean) {
+    this._lock = use;
+  }
+
 
   /**
    * Register a toolbox for the editor.
