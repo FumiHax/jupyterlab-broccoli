@@ -1,7 +1,7 @@
 {
   "name": "jupyterlab-broccoli-root",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Fork of blockly extension for JupyterLab.",
   "keywords": [
     "blockly",
