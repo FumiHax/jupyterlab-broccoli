@@ -16,6 +16,7 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab-4
 * Corresponding version is jupyterlab-blockly 0.3.0a
   * https://github.com/QuantStack/jupyterlab-blockly
 ## Install
+#### for JupyterLab 4.0.x
 ```
 pip install jupyterlab-broccoli
 ```
