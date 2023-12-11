@@ -56,7 +56,7 @@
     "@jupyterlab/settingregistry": "^3.6",
     "@jupyterlab/translation": "^3.6",
     "@jupyterlab/ui-components": "^3.6",
-    "jupyterlab-broccoli": "^0.3.5"
+    "jupyterlab-broccoli": "^0.3.7"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^3.6",
