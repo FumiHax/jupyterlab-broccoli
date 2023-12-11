@@ -24,8 +24,7 @@ pip install jupyterlab-broccoli
 pip install jupyterlab-broccoli==0.3.6
 ```
 ## Requirements
-* ~0.4.4 : JupyterLab ^4.0.0, Blockly ^9.3.3
-* =0.4.0 : JupyterLab ^4.0.0, Blockly ^10.2.2 (Over write functions of generator do not work)
+* ~0.4.x : JupyterLab ^4.0.0, Blockly ^9.3.3
 * ~0.3.x : JupyterLab ^3.6.0, Blockly ^9.3.3
 
 ## Screen Shot
