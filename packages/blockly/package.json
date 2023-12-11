@@ -37,6 +37,7 @@
     "install:extension": "jlpm build"
   },
   "dependencies": {
+    "@jupyter-widgets/base": "^6.0.6",
     "@jupyterlab/apputils": "^3.6",
     "@jupyterlab/cells": "^3.6",
     "@jupyterlab/codeeditor": "^3.6",

@@ -17,10 +17,12 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
 ## Install
 #### for JupyterLab ^4.0.x
 ```
+pip install jupyterlab-widgets
 pip install jupyterlab-broccoli
 ```
 #### for JupyterLab ^3.6.x
 ```
+pip install jupyterlab-widgets==1.1.7
 pip install jupyterlab-broccoli==0.3.6
 ```
 ## Requirements
