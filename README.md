@@ -1,6 +1,6 @@
 # jupyterlab-broccoli
 JupyterLab Extension for Blockly 
-This is a fork of [jupyterlab-Blockly](https://github.com/QuantStack/jupyterlab-blockly) extension for JupyterLab
+This is a fork of [jupyterlab-blockly](https://github.com/QuantStack/jupyterlab-blockly) extension for JupyterLab
 
 ## Broccoli
 * jupyterlab-broccoli is the fork of **jupyterlab-blockly**
