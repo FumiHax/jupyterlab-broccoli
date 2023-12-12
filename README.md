@@ -11,8 +11,8 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
   * New split layout for panel.
   * Save using kernel information to file.
   * Fixed a few bugs.
-  * Added "Copy Blockly Output to Clipborad" command at context menu. (v0.3.6)
-* Corresponding version is jupyterlab-blockly 0.3.0a
+  * Added "Copy Blockly Output to Clipborad" command at context menu. 
+  * JupyterLab v4 Support (0.4.x). for-jupyterlab-4 branch.
   * https://github.com/QuantStack/jupyterlab-blockly
 ## Install
 #### for JupyterLab ^4.0.x
@@ -23,7 +23,7 @@ pip install jupyterlab-broccoli
 #### for JupyterLab ^3.6.x
 ```
 pip install jupyterlab-widgets==1.1.7
-pip install jupyterlab-broccoli==0.3.6
+pip install jupyterlab-broccoli==0.3.8
 ```
 ## Requirements
 * ~0.4.x : JupyterLab ^4.0.0, Blockly ^9.3.3
