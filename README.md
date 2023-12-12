@@ -1,6 +1,6 @@
 # jupyterlab-broccoli
 JupyterLab Extension for Blockly 
-This is a fork of Jupyterlab-Blockly extension for JupyterLab
+This is a fork of [Jupyterlab-Blockly](https://github.com/QuantStack/jupyterlab-blockly) extension for JupyterLab
 
 ## Broccoli
 * jupyterlab-broccoli is the fork of **jupyterlab-blockly**
@@ -13,7 +13,7 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
   * Fixed a few bugs.
   * Added "Copy Blockly Output to Clipborad" command at context menu. 
   * JupyterLab v4 Support (0.4.x). for-jupyterlab-4 branch.
-  * https://github.com/QuantStack/jupyterlab-blockly
+ 
 ## Install
 #### for JupyterLab ^4.0.x
 ```
