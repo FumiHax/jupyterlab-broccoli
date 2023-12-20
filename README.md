@@ -13,6 +13,7 @@ This is a fork of Jupyterlab-Blockly extension for JupyterLab
   * Fixed a few bugs.
   * Added "Copy Blockly Output to Clipborad" command at context menu. (v0.3.6)
   * JupyterLab v4 support.
+  * overwrite functon of jupyterlab-broccoli-blocks does not work now.
 * Corresponding version is jupyterlab-blockly 0.3.0a
   * https://github.com/QuantStack/jupyterlab-blockly
 ## Install
