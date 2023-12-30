@@ -13,7 +13,10 @@
   * Fixed a few bugs.
   * Added "Copy Blockly Output to Clipborad" command at context menu. 
   * JupyterLab v4 Support (0.4.x). for-jupyterlab-4 branch.
- 
+
+## PyPI Project
+* https://pypi.org/project/jupyterlab-broccoli/
+
 ## Install
 #### for JupyterLab ^4.0.x
 ```
