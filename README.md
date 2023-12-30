@@ -17,6 +17,9 @@
 ## PyPI Project
 - https://pypi.org/project/jupyterlab-broccoli/
 
+## npm
+- 
+
 ## Install
 #### for JupyterLab ^4.0.x
 ```
