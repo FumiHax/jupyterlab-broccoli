@@ -1,6 +1,10 @@
 {
   "name": "jupyterlab-broccoli-extension",
+<<<<<<< HEAD
   "version": "0.3.8",
+=======
+  "version": "0.4.5",
+>>>>>>> origin/for-jupyterlab-4
   "description": "Blockly extension for JupyterLab.",
   "keywords": [
     "jupyter",
@@ -43,6 +47,7 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
+<<<<<<< HEAD
     "@jupyter-widgets/base": "^4 || ^5",
     "@jupyter-widgets/jupyterlab-manager": "^3.0.0",
     "@jupyterlab/application": "^3.6",
@@ -57,13 +62,29 @@
     "@jupyterlab/translation": "^3.6",
     "@jupyterlab/ui-components": "^3.6",
     "jupyterlab-broccoli": "^0.3.8"
+=======
+    "@jupyter-widgets/base": "^6.0",
+    "@jupyterlab/application": "^4.0.9",
+    "@jupyterlab/apputils": "^4.1.9",
+    "@jupyterlab/codeeditor": "^4.0.9",
+    "@jupyterlab/filebrowser": "^4.0.9",
+    "@jupyterlab/launcher": "^4.0.9",
+    "@jupyterlab/mainmenu": "^4.0.9",
+    "@jupyterlab/rendermime": "^4.0.9",
+    "@jupyterlab/settingregistry": "^4.0.9",
+    "@jupyterlab/translation": "^4.0.9",
+    "@jupyterlab/ui-components": "^4.0.9",
+    "@rjsf/utils": "^5.15.0",
+    "@types/react": "^18.2.41",
+    "jupyterlab-broccoli": "~0.4.5"
+>>>>>>> origin/for-jupyterlab-4
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^3.6",
+    "@jupyterlab/builder": "^4.0.9",
     "npm-run-all": "^4.1.5",
     "rimraf": "^4.4.0",
     "source-map-loader": "^4.0.1",
-    "typescript": "~3.9.0"
+    "typescript": "~4.9.5"
   },
   "sideEffects": [
     "style/*.css",
@@ -86,10 +107,6 @@
         "singleton": true
       },
       "@jupyter-widgets/base": {
-        "bundled": false,
-        "singleton": true
-      },
-      "@jupyter-widgets/jupyterlab-manager": {
         "bundled": false,
         "singleton": true
       }

@@ -9,14 +9,25 @@ import {
   runIcon,
   stopIcon,
   saveIcon,
-  circleEmptyIcon,
+  //circleEmptyIcon,
+  clearIcon,
+  copyIcon,
+  duplicateIcon
 } from '@jupyterlab/ui-components';
 
+import { JupyterFrontEnd } from '@jupyterlab/application';
+
+import { SessionContextDialogs } from '@jupyterlab/apputils';
+import { WidgetTracker } from '@jupyterlab/apputils';
+
+import { CodeCell } from '@jupyterlab/cells';
+import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
 import { SplitPanel } from '@lumino/widgets';
 import { Signal } from '@lumino/signaling';
 
 import type Blockly from 'blockly';
 
+import { closeDialog } from './dialog';
 import { BlocklyLayout } from './layout';
 import { BlocklyManager } from './manager';
 import {
@@ -25,14 +36,11 @@ import {
   SelectToolbox,
   Spacer
 } from './toolbar';
-import { CodeCell } from '@jupyterlab/cells';
 
-import { TranslationBundle, nullTranslator } from '@jupyterlab/translation';
-import { sessionContextDialogs } from '@jupyterlab/apputils';
-import { closeDialog } from './dialog';
-import { JupyterFrontEnd } from '@jupyterlab/application';
+import { JlbTools } from './tools';
 
 const DIRTY_CLASS = 'jp-mod-dirty';
+
 
 /**
  * DocumentWidget: widget that represents the view or editor for a file type.
@@ -84,17 +92,52 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
     const button_clear = new BlocklyButton({
       label: '',
-      icon: circleEmptyIcon,
+      //icon: circleEmptyIcon,
+      icon: clearIcon,
       className: 'jp-blockly-clearButton',
       onClick: () => this._blayout.clearOutputArea(),
-      tooltip: 'Clear Output'
+      tooltip: 'Copy Output View'
+    });
+
+    const button_copyOutput = new BlocklyButton({
+      label: '',
+      icon: copyIcon,
+      className: 'jp-blockly-copyOutputButton',
+      onClick: () => {
+        const outputAreaAreas = this._blayout.cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
+        if (outputAreaAreas.length > 0) {
+          let element = outputAreaAreas[0];
+          for (let i=1; i<outputAreaAreas.length; i++) {
+            element.appendChild(outputAreaAreas[i]);
+          }
+          JlbTools.copyElement(element as HTMLElement);
+        }
+      },
+      tooltip: 'Copy Output View'
+    });
+
+    const button_copyCode = new BlocklyButton({
+      label: '',
+      icon: duplicateIcon,
+      className: 'jp-blockly-copyCodeButton',
+      onClick: () => {
+        JlbTools.copyElement(this._blayout.code.node);
+      },
+      tooltip: 'Copy Code View'
     });
 
     this.toolbar.addItem('save', button_save);
     this.toolbar.addItem('run', button_run);
     this.toolbar.addItem('stop', button_stop);
+    this.toolbar.addItem('spacer1', new Spacer());
+    this.toolbar.addItem('spacer2', new Spacer());
+    this.toolbar.addItem('spacer3', new Spacer());
+    this.toolbar.addItem('spacer5', new Spacer());
     this.toolbar.addItem('clear', button_clear);
-    this.toolbar.addItem('spacer', new Spacer());
+    this.toolbar.addItem('copyOutput', button_copyOutput);
+    this.toolbar.addItem('copyCode', button_copyCode);
+    this.toolbar.addItem('spacer7', new Spacer());
+    this.toolbar.addItem('spacer8', new Spacer());
     this.toolbar.addItem(
       'toolbox',
       new SelectToolbox({
@@ -115,9 +158,20 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     this._manager.changed.connect(this._onBlockChanged, this);
   } /* End of constructor */
 
+
   // for dialog.ts
   get trans(): TranslationBundle {
     return this._trans;
+  }
+
+  //
+  get blayout(): BlocklyLayout {
+    return this._blayout;
+  }
+
+  //
+  get cell(): CodeCell {
+    return this._blayout?.cell;
   }
 
  /**
@@ -174,14 +228,17 @@ export namespace BlocklyEditor {
   }
 }
 
+
 /**
  * Widget that contains the main view of the DocumentWidget.
  */
 export class BlocklyPanel extends SplitPanel {
-  private _context: DocumentRegistry.IContext<DocumentModel>;
+  private _tracker: WidgetTracker<BlocklyEditor>;
   private _content;
+  private _context: DocumentRegistry.IContext<DocumentModel>;
   private _rendermime: IRenderMimeRegistry;
   private _manager: BlocklyManager;
+  private _editor: BlocklyEditor;
 
   /**
    * Construct a `BlocklyPanel`.
@@ -189,6 +246,7 @@ export class BlocklyPanel extends SplitPanel {
    * @param context - The documents context.
    */
   constructor(
+    tracker: WidgetTracker<BlocklyEditor>,
     context: DocumentRegistry.IContext<DocumentModel>,
     manager: BlocklyManager,
     rendermime: IRenderMimeRegistry
@@ -200,6 +258,8 @@ export class BlocklyPanel extends SplitPanel {
     this._context = context;
     this._rendermime = rendermime;
     this._manager = manager;
+    this._tracker = tracker;
+    this._editor = null;
 
     // Load the content of the file when the context is ready
     this._context.ready.then(() => this._load());
@@ -237,6 +297,14 @@ export class BlocklyPanel extends SplitPanel {
     return this.layout as BlocklyLayout;
   }
 
+  set activeEditor(editor: BlocklyEditor) {
+    this._editor = editor;
+  }
+
+  get activeEditor(): BlocklyEditor {
+    return this._editor;
+  }
+
   /**
    * Dispose of the resources held by the widget.
    */
@@ -261,7 +329,10 @@ export class BlocklyPanel extends SplitPanel {
     }
 
     if (kernelname === '') {
-      sessionContextDialogs.selectKernel(this._context.sessionContext, (this._context as any).translator);
+      if (this._editor.id === this._tracker.currentWidget.id) {
+        const sessionContextDialogs = new SessionContextDialogs({translator: (this._context as any).translator});
+        sessionContextDialogs.selectKernel(this._context.sessionContext);
+      }
     }
     else {
       this._manager.selectKernel(kernelname);

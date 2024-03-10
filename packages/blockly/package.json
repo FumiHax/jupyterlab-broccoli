@@ -1,6 +1,10 @@
 {
   "name": "jupyterlab-broccoli",
+<<<<<<< HEAD
   "version": "0.3.8",
+=======
+  "version": "0.4.5",
+>>>>>>> origin/for-jupyterlab-4
   "description": "Fork of blockly extension for JupyterLab.",
   "keywords": [
     "blockly",
@@ -8,9 +12,15 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
+<<<<<<< HEAD
   "homepage": "https://github.com/FumiHac/jupyterlab-broccoli",
   "bugs": {
     "url": "https://github.com/FumiHac/jupyterlab-broccoli/issues"
+=======
+  "homepage": "https://github.com/FumiHax/jupyterlab-broccoli",
+  "bugs": {
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli/issues"
+>>>>>>> origin/for-jupyterlab-4
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -26,7 +36,11 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
+<<<<<<< HEAD
     "url": "https://github.com/FumiHac/jupyterlab-broccoli.git"
+=======
+    "url": "https://github.com/FumiHax/jupyterlab-broccoli.git"
+>>>>>>> origin/for-jupyterlab-4
   },
   "scripts": {
     "build": "tsc -b",
@@ -37,6 +51,7 @@
     "install:extension": "jlpm build"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@jupyter-widgets/base": "^6.0.6",
     "@jupyterlab/apputils": "^3.6",
     "@jupyterlab/cells": "^3.6",
@@ -54,6 +69,29 @@
     "blockly": "9.3.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
+=======
+    "@jupyterlab/application": "^4.0.9",
+    "@jupyterlab/apputils": "^4.1.9",
+    "@jupyterlab/cells": "~4.0.9",
+    "@jupyterlab/codeeditor": "^4.0.9",
+    "@jupyterlab/codemirror": "^4.0.9",
+    "@jupyterlab/coreutils": "^6.0.9",
+    "@jupyterlab/docregistry": "^4.0.9",
+    "@jupyterlab/notebook": "^4.0.9",
+    "@jupyterlab/rendermime": "^4.0.9",
+    "@jupyterlab/services": "^7.0.9",
+    "@jupyterlab/settingregistry": "^4.0.9",
+    "@jupyterlab/translation": "^4.0.9",
+    "@jupyterlab/ui-components": "^4.0.9",
+    "@lumino/algorithm": "^2.0.1",
+    "@lumino/coreutils": "^2.1.2",
+    "@lumino/messaging": "^2.0.1",
+    "@lumino/signaling": "^2.1.2",
+    "@lumino/widgets": "^2.3.1",
+    "@types/react": "^18.2.41",
+    "blockly": "^9.3.3",
+    "highlight.js": "^11.9.0"
+>>>>>>> origin/for-jupyterlab-4
   },
   "devDependencies": {
     "rimraf": "^4.4.0",

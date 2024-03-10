@@ -1,28 +1,40 @@
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISessionContext, showErrorMessage } from '@jupyterlab/apputils';
-import { CodeCell, CodeCellModel } from '@jupyterlab/cells';
+import { Cell, CodeCell, CodeCellModel } from '@jupyterlab/cells';
+//import { RawCellModel } from '@jupyterlab/cells';
+//import { CodeCellModel } from '@jupyterlab/cells';
 
 import { Message } from '@lumino/messaging';
 import { SplitLayout, SplitPanel, Widget } from '@lumino/widgets';
+//import { BoxLayout } from '@lumino/widgets';
 import { DockPanel } from '@lumino/widgets';
-import { IIterator, ArrayIterator } from '@lumino/algorithm';
 import { Signal } from '@lumino/signaling';
+//import { IIterator, ArrayIterator } from '@lumino/algorithm';
 
-import * as Blockly from 'blockly';
-
-import { BlocklyManager } from './manager';
-import { THEME } from './utils';
-
+//import { InputArea } from '@jupyterlab/cells';
+//import { SimplifiedOutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
+//import { CodeMirrorEditor } from './editor';
+//import { CodeEditor } from '@jupyterlab/codeeditor'
+import { CodeMirrorEditorFactory } from '@jupyterlab/codemirror'
 import {
   codeIcon,
   circleIcon,
 } from '@jupyterlab/ui-components';
 
+import * as Blockly from 'blockly';
+
+import { BlocklyManager } from './manager';
+import { THEME } from './utils';
+import { SourceCodeWidget } from './codewidget';
+
+
 /**
  * A blockly layout to host the Blockly editor.
  */
 export class BlocklyLayout extends SplitLayout {
+//export class BlocklyLayout extends BoxLayout {
   private _host: Widget;
+  private _code: SourceCodeWidget;
   private _manager: BlocklyManager;
   private _workspace: Blockly.WorkspaceSvg;
   private _sessionContext: ISessionContext;
@@ -48,28 +60,65 @@ export class BlocklyLayout extends SplitLayout {
     this._host = new Widget();
     this._dock = new DockPanel();
 
+    const factoryService = new CodeMirrorEditorFactory({});
     // Creating a CodeCell widget to render the code and
     // outputs from the execution reply.
     this._cell = new CodeCell({
-      model: new CodeCellModel({}),
+      model: new CodeCellModel(),
+      contentFactory: new Cell.ContentFactory({
+        editorFactory: factoryService.newInlineEditor
+        //editorFactory: factoryService.newInlineEditor.bind(factoryService)
+      }),
       rendermime
     });
+
     // Trust the outputs and set the mimeType for the code
     this._cell.addClass('jp-blockly-codeCell');
+    this._cell.title.label = '# Code View';
+    this._cell.title.icon = codeIcon;
     this._cell.readOnly = true;
     this._cell.model.trusted = true;
     this._cell.model.mimeType = this._manager.mimeType;
-    // adding the style to the element as a quick fix
-    // we should make it work with the css class
     this._cell.node.style.overflow = 'scroll';
+<<<<<<< HEAD
     this._cell.title.icon = codeIcon;
     this._cell.title.label = '_Code View';
+=======
+>>>>>>> origin/for-jupyterlab-4
     //
-    this._cell.outputArea.node.style.overflow = 'scroll';
-    this._cell.outputArea.node.style.cssText = 'border: 0px;';
+    this._cell.outputArea.title.label = '# Output View';
     this._cell.outputArea.title.icon = circleIcon;
+<<<<<<< HEAD
     this._cell.outputArea.title.label = '_Output View';
     //
+=======
+    this._cell.outputArea.node.style.overflow = 'scroll';
+    //this._cell.outputArea.node.style.marginTop = '40px';
+    this._cell.outputArea.node.style.paddingTop = '40px';
+    this._cell.outputArea.node.style.paddingRight = '20px';
+    this._cell.outputArea.node.style.paddingBottom = '100px';
+    this._cell.outputArea.node.style.border = '0px';
+
+    this._code = new SourceCodeWidget('jp-blockly-sourceCode', '# Code View');
+
+/*
+    // InputArea of code
+    this._inpt = new InputArea({
+      model: new CodeCellModel({}),
+      contentFactory: new Cell.ContentFactory({
+        //editorFactory: factoryService.newDocumentEditor
+        editorFactory: factoryService.newDocumentEditor.bind(factoryService)
+        //editorFactory: factoryService.newInlineEditor.bind(factoryService)
+      })
+    });
+
+    this._output = new SimplifiedOutputArea({
+      model: new OutputAreaModel({ trusted: true }),
+      rendermime
+    });
+*/
+
+>>>>>>> origin/for-jupyterlab-4
     this._manager.changed.connect(this._onManagerChanged, this);
   }
 
@@ -78,6 +127,12 @@ export class BlocklyLayout extends SplitLayout {
    */
   get cell(): CodeCell {
     return this._cell;
+  }
+
+  /*
+   */
+  get code(): SourceCodeWidget {
+    return this._code;
   }
 
   /*
@@ -120,9 +175,11 @@ export class BlocklyLayout extends SplitLayout {
   /**
    * Create an iterator over the widgets in the layout.
    */
+/*
   iter(): IIterator<Widget> {
     return new ArrayIterator([]);
   }
+*/
 
   /**
    * Remove a widget from the layout.
@@ -176,6 +233,8 @@ export class BlocklyLayout extends SplitLayout {
       extra_init + this._manager.generator.workspaceToCode(this._workspace);
     //const code = "import ipywidgets as widgets\nwidgets.IntSlider()";
     this._cell.model.sharedModel.setSource(code);
+    this._code.setLanguage(this._manager.kernelspec?.language);
+    this._code.setSource(code);
 
     // Execute the code using the kernel, by using a static method from the
     // same class to make an execution request.
@@ -188,14 +247,15 @@ export class BlocklyLayout extends SplitLayout {
         `
       );
     } else {
+      // focus outputArea
       this._dock.activateWidget(this._cell.outputArea);
       //
       CodeCell.execute(this._cell, this._sessionContext)
         .then(() => this._resizeWorkspace())
-        .catch(e => console.error(e));
-      //
-      let style = this._cell.outputArea.node.style.cssText;
-      this._cell.outputArea.node.style.cssText = style.replace('top: 26px;', 'top: 40px; border: 0px;');
+        .catch(e => { 
+          console.error(e);
+          window.alert('Warning: Perhaps, canceled future for execute_request message before replies were done.');
+        });
     }
   }
 
@@ -207,6 +267,7 @@ export class BlocklyLayout extends SplitLayout {
   }
 
   clearOutputArea(): void {
+    // focus outputArea
     this._dock.activateWidget(this._cell.outputArea);
     this._cell.outputArea.model.clear();
   }
@@ -218,7 +279,8 @@ export class BlocklyLayout extends SplitLayout {
     }
     if (this._cell.outputArea!=null && !this._cell.outputArea.isVisible) { 
       this._dock.addWidget(this._cell.outputArea);
-      this._dock.addWidget(this._cell);
+      //this._dock.addWidget(this._cell);
+      this._dock.addWidget(this._code);
       this.removeWidgetAt(1);
       this.insertWidget(1, this._dock);
     }
@@ -263,9 +325,10 @@ export class BlocklyLayout extends SplitLayout {
       // Get extra code from the blocks in the workspace.
       const extra_init = this.getBlocksToplevelInit();
       // Serializing our workspace into the chosen language generator.
-      const code =
-        extra_init + this._manager.generator.workspaceToCode(this._workspace);
+      const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
+      this._code.setLanguage(this._manager.kernelspec?.language);
+      this._code.setSource(code);
       //
       if (event.type == Blockly.Events.FINISHED_LOADING) {
         this._finishedLoading = true;
@@ -273,8 +336,9 @@ export class BlocklyLayout extends SplitLayout {
       else if (this._finishedLoading && (
           event.type == Blockly.Events.BLOCK_CHANGE ||
           event.type == Blockly.Events.BLOCK_CREATE ||
-          event.type == Blockly.Events.BLOCK_DELETE ||
-          event.type == Blockly.Events.BLOCK_MOVE)) {
+          event.type == Blockly.Events.BLOCK_MOVE   ||
+          event.type == Blockly.Events.BLOCK_DELETE))
+      {
         // dirty workspace
         this._manager.dirty(true);
       }
@@ -294,10 +358,12 @@ export class BlocklyLayout extends SplitLayout {
       // Get extra code from the blocks in the workspace.
       const extra_init = this.getBlocksToplevelInit();
       // Serializing our workspace into the chosen language generator.
-      const code =
-        extra_init + this._manager.generator.workspaceToCode(this._workspace);
+      const code = extra_init + this._manager.generator.workspaceToCode(this._workspace);
       this._cell.model.sharedModel.setSource(code);
       this._cell.model.mimeType = this._manager.mimeType;
+      //
+      this._code.setLanguage(this._manager.kernelspec?.language);
+      this._code.setSource(code);
     }
     else if (change === 'toolbox') {
       this._workspace.updateToolbox(this._manager.toolbox as any);

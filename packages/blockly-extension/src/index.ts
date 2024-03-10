@@ -11,21 +11,18 @@ import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { ILauncher } from '@jupyterlab/launcher';
 import { ITranslator } from '@jupyterlab/translation';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-import { IKernelMenu, IMainMenu } from '@jupyterlab/mainmenu';
-import { sessionContextDialogs } from '@jupyterlab/apputils';
+//import { MainMenu } from '@jupyterlab/mainmenu';
+import { IMainMenu } from '@jupyterlab/mainmenu';
+import { SessionContextDialogs } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-
-import { CodeCell } from '@jupyterlab/cells';
-import {
-  WidgetRenderer,
-  registerWidgetManager
-} from '@jupyter-widgets/jupyterlab-manager';
 
 import { BlocklyEditorFactory } from 'jupyterlab-broccoli';
 import { BlocklyEditor } from 'jupyterlab-broccoli';
 import { IBlocklyRegistry } from 'jupyterlab-broccoli';
+import { JlbTools } from 'jupyterlab-broccoli';
 
 import { blockly_icon } from './icons';
+
 
 /**
  * The name of the factory that creates the editor widgets.
@@ -36,6 +33,17 @@ const PALETTE_CATEGORY = 'Blockly editor';
 
 namespace CommandIDs {
   export const createNew = 'blockly:create-new-blockly-file';
+  //
+  export const interruptKernel = 'blockly:interrupt-to-kernel';
+  export const restartKernel = 'blockly:restart-Kernel';
+  export const restartKernelAndClear = 'blockly:restart-and-clear';
+  //export const clearAllOutputs = 'blockly:clear-all-cell-outputs';
+  //export const restartClear = 'blockly:restart-clear-output';
+  //export const restartRunAll = 'blockly:restart-run-all';
+  export const reconnectToKernel = 'blockly:reconnect-kernel';
+  //
+  export const copyBlocklyToClipboard = 'blockly:copy-to-clipboard';
+  //export const copyNotebookToClipboard = 'notebook:copy-to-clipboard';
 }
 
 /**
@@ -91,11 +99,15 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
     }
 
     const trans = translator.load('jupyterlab');
-    const { commands } = app;
+    const { commands, shell } = app;
+
+    const isEnabled = (): boolean => {
+      return JlbTools.isEnabled(shell, tracker);
+    };
 
     // Creating the widget factory to register it so the document manager knows about
     // our new DocumentWidget
-    const widgetFactory = new BlocklyEditorFactory(app, {
+    const widgetFactory = new BlocklyEditorFactory(app, tracker, {
       name: FACTORY,
       modelName: 'text',
       fileTypes: ['blockly'],
@@ -170,16 +182,15 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       widgetFactory.registry.setlanguage(language);
     });
 
+    //
     commands.addCommand(CommandIDs.createNew, {
-      label: args =>
-        args['isPalette'] ? 'New Blockly Editor' : 'Blockly Editor',
+      label: args => args['isPalette'] ? 'New Blockly Editor' : 'Blockly Editor',
       caption: 'Create a new Blockly Editor',
       icon: args => (args['isPalette'] ? null : blockly_icon),
       execute: async args => {
         // Get the directory in which the Blockly file must be created;
         // otherwise take the current filebrowser directory
-        const cwd =
-          args['cwd'] || browserFactory.tracker.currentWidget.model.path;
+        const cwd = args['cwd'] || browserFactory.tracker.currentWidget.model.path;
 
         // Create a new untitled Blockly file
         const model = await commands.execute('docmanager:new-untitled', {
@@ -214,32 +225,112 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
       });
     }
 
+    //
+    // Context Menu
+    commands.addCommand(CommandIDs.copyBlocklyToClipboard, {
+      label: trans.__('Copy Blockly Output View to Clipboard'),
+      execute: args => {
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
+        if (current) {
+          const outputAreaAreas = current.cell.outputArea.node.getElementsByClassName('jp-OutputArea-output');
+          if (outputAreaAreas &&  outputAreaAreas.length > 0) {
+            let element = outputAreaAreas[0];
+            for (let i=1; i<outputAreaAreas.length; i++) {
+              element.appendChild(outputAreaAreas[i]);
+            }
+            JlbTools.copyElement(element as HTMLElement);
+          }
+        }
+      },
+      isEnabled
+    });
+
+    // app.contextMenu : ContextMenuSvg
+    // app.contextMenu.menu : MenuSvg
+    app.contextMenu.addItem({
+      command: CommandIDs.copyBlocklyToClipboard,
+      selector: '.jp-OutputArea-child',
+      rank: 0,
+    });
+
+
+    //
+    // Main Menu
+    commands.addCommand(CommandIDs.interruptKernel, {
+      label: trans.__('Interrupt Kernel'),
+      caption: trans.__('Interrupt the kernel'),
+      execute: args => { 
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
+        if (!current) return;
+        const kernel = current.context.sessionContext.session?.kernel;
+        if (kernel) return kernel.interrupt();
+      },
+      isEnabled
+      //isEnabled: args => (args.toolbar ? true : isEnabled()),
+      //icon: args => (args.toolbar ? stopIcon : undefined)
+    });
+
+    commands.addCommand(CommandIDs.restartKernel, {
+      label: trans.__('Restart Kernel…'),
+      caption: trans.__('Restart the kernel'),
+      execute: args => { 
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
+        if (current) {
+          const sessionDialogs = new  SessionContextDialogs({translator});
+          return sessionDialogs.restart(current.context.sessionContext);
+        }
+      },
+      isEnabled
+    });
+
+    commands.addCommand(CommandIDs.restartKernelAndClear, {
+      label: trans.__('Clear…'),
+      caption: trans.__('Restart the kernel and clear output view'),
+      execute: args => { 
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
+        if (current) {
+          current.blayout?.clearOutputArea();
+        }
+      },
+      isEnabled
+    });
+
+    commands.addCommand(CommandIDs.reconnectToKernel, {
+      label: trans.__('Reconnect to Kernel'),
+      caption: trans.__('Reconnect to the kernel'),
+      execute: args => { 
+        const current = JlbTools.getCurrentWidget(shell, tracker, args);
+        if (!current) return;
+        const kernel = current.context.sessionContext.session?.kernel;
+        if (kernel) return kernel.reconnect();
+      },
+      isEnabled: args => (args.toolbar ? true : isEnabled())
+    });
+
     // Add the command to the main menu
     if (mainMenu) {
-      mainMenu.kernelMenu.kernelUsers.add({
-        tracker,
-        interruptKernel: current => {
-          const kernel = current.context.sessionContext.session?.kernel;
-          if (kernel) {
-            return kernel.interrupt();
-          }
-          return Promise.resolve(void 0);
-        },
-        reconnectToKernel: current => {
-          const kernel = current.context.sessionContext.session?.kernel;
-          if (kernel) {
-            return kernel.reconnect();
-          }
-          return Promise.resolve(void 0);
-        },
-        restartKernel: current => {
-          sessionContextDialogs.restart(current.context.sessionContext, translator);
-          return Promise.resolve(void 0);
-        },
-        shutdownKernel: current => current.context.sessionContext.shutdown()
-      } as IKernelMenu.IKernelUser<BlocklyEditor>);
+      mainMenu.kernelMenu.kernelUsers.interruptKernel.add({
+        id: CommandIDs.interruptKernel,
+        isEnabled
+      });
+
+      mainMenu.kernelMenu.kernelUsers.restartKernel.add({
+        id: CommandIDs.restartKernel,
+        isEnabled
+      });
+
+      mainMenu.kernelMenu.kernelUsers.clearWidget.add({
+        id: CommandIDs.restartKernelAndClear,
+        isEnabled
+      });
+
+      mainMenu.kernelMenu.kernelUsers.reconnectToKernel.add({
+        id: CommandIDs.reconnectToKernel,
+        isEnabled
+      });
     }
 
+/*
     if (widgetRegistry) {
       tracker.forEach(panel => {
         registerWidgetManager(
@@ -260,11 +351,13 @@ const plugin: JupyterFrontEndPlugin<IBlocklyRegistry> = {
         }
       });
     }
-
+*/
     return widgetFactory.registry;
   }
 };
 
+
+/*
 function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
   for (const w of cells) {
     if (w instanceof WidgetRenderer) {
@@ -272,6 +365,8 @@ function* widgetRenderers(cells: CodeCell[]): IterableIterator<WidgetRenderer> {
     }
   }
 }
+*/
+
 
 //
 const plugins: JupyterFrontEndPlugin<any>[] = [
