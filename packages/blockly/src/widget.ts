@@ -48,7 +48,7 @@ const DIRTY_CLASS = 'jp-mod-dirty';
 export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
   private _context: DocumentRegistry.IContext<DocumentModel>;
-  private _trans: TranslationBundle;
+  private _translator: TranslationBundle;
   private _manager: BlocklyManager;
   private _blayout: BlocklyLayout;
   private _dirty = false;
@@ -60,7 +60,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
     this._manager = options.manager;
 
     // Loading the ITranslator
-    this._trans = ((this._context as any).translator || nullTranslator).load('jupyterlab');
+    this._translator = ((this._context as any).translator || nullTranslator).load('jupyterlab');
 
     // this.content is BlocklyPanel
     this._blayout = this.content.layout as BlocklyLayout;
@@ -161,7 +161,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
 
   // for dialog.ts
   get trans(): TranslationBundle {
-    return this._trans;
+    return this._translator;
   }
 
   //
