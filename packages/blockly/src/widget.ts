@@ -96,7 +96,7 @@ export class BlocklyEditor extends DocumentWidget<BlocklyPanel, DocumentModel> {
       icon: clearIcon,
       className: 'jp-blockly-clearButton',
       onClick: () => this._blayout.clearOutputArea(),
-      tooltip: 'Copy Output View'
+      tooltip: 'Clear Output View'
     });
 
     const button_copyOutput = new BlocklyButton({
